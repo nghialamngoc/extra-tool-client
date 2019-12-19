@@ -1,19 +1,18 @@
 <template>
   <v-container fluid>
-    <v-card v-if="$store.state.isLogin">
+    <v-card>
       <v-navigation-drawer
         expand-on-hover
-        hide-overlay
+        permanent
         fixed
         right
         class="position_top-50 utilities"
         mini-variant-width="auto"
-        overlay-opacity="0"
         height="auto"
         floating
         color="#FAFAFA"
         width="auto"
-        v-show="$vuetify.breakpoint.mdAndUp"
+        v-if="isShowUtilities"
       >
         <v-list class="pa-0">
           <v-list-item link>
@@ -86,20 +85,17 @@
         <v-col cols="12" md="3" lg="2">TO DO</v-col>
       </v-row>
     </div>
-    <v-dialog
-      v-model="newArticleDialog"
-      fullscreen
-    >
+    <v-dialog v-model="newArticleDialog" max-width="70%">
       <article-create-dialog v-on:closeDialog="closeNewArticleDialog"></article-create-dialog>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
-import ArticleCreateDialogComponent from '../Article/ArticleCreateDialog';
+import ArticleCreateDialogComponent from "../Article/ArticleCreateDialog";
 export default {
   components: {
-    'article-create-dialog': ArticleCreateDialogComponent
+    "article-create-dialog": ArticleCreateDialogComponent
   },
   data() {
     return {
@@ -144,16 +140,19 @@ export default {
       ]
     };
   },
-  mounted(){
-  },
-  methods: {
-    openNewArticleDialog(){
-      this.newArticleDialog = true;
-    },
-    closeNewArticleDialog(){
-      this.newArticleDialog = false;
+  computed: {
+    isShowUtilities(){
+      return this.$vuetify.breakpoint.mdAndUp && this.$store.state.isLogin === true;
     }
   },
+  methods: {
+    openNewArticleDialog() {
+      this.newArticleDialog = true;
+    },
+    closeNewArticleDialog() {
+      this.newArticleDialog = false;
+    }
+  }
 };
 </script>
 
@@ -207,7 +206,7 @@ a {
     margin-top: 5px;
     font-size: 22px;
     font-weight: 500;
-    a{
+    a {
       &:hover {
         text-decoration: underline;
         color: black;

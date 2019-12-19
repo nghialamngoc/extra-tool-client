@@ -43,9 +43,17 @@ export default {
     "editor-component": Editor
   },
   data: () => ({
-    items: ["javascript", "vuejs", "web development", "tech"],
+    items: ["javascript", "vuejs", "css", "typescript", "react", "angular"],
     value: []
   }),
+  watch:{
+    $route(){
+      this.value = this.$route.query.type ? [ this.$route.query.type ] : []
+    }
+  },
+  mounted(){
+    this.value = this.$route.query.type ? [ this.$route.query.type ] : []
+  },
   methods: {
     onClose(){
       this.$emit('closeDialog')

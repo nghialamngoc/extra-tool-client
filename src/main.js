@@ -15,7 +15,7 @@ Vue.use(vueCookies);
 const router = new Router({ routes, mode: 'history' });
 
 Vue.config.productionTip = false;
-
+console.log(process.env.NODE_ENV)
 new Vue({
   vuetify,
   router,

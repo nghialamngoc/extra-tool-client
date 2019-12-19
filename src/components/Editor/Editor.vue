@@ -2,7 +2,6 @@
   <div class="editor">
     <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
       <div class="menubar">
-
         <button
           class="menubar__button"
           :class="{ 'is-active': isActive.bold() }"
@@ -107,39 +106,29 @@
           <v-icon>mdi-code-tags</v-icon>
         </button>
 
-        <button
-          class="menubar__button"
-          @click="commands.horizontal_rule"
-        >
+        <button class="menubar__button" @click="commands.horizontal_rule">
           <v-icon>mdi-minus</v-icon>
         </button>
 
-        <button
-          class="menubar__button"
-          @click="commands.undo"
-        >
+        <button class="menubar__button" @click="commands.undo">
           <v-icon>mdi-undo</v-icon>
         </button>
 
-        <button
-          class="menubar__button"
-          @click="commands.redo"
-        >
+        <button class="menubar__button" @click="commands.redo">
           <v-icon>mdi-redo</v-icon>
         </button>
-
       </div>
     </editor-menu-bar>
-
     <editor-content class="editor__content" :editor="editor" />
   </div>
 </template>
 
 <script>
-import javascript from 'highlight.js/lib/languages/javascript'
-import css from 'highlight.js/lib/languages/css'
+import javascript from "highlight.js/lib/languages/javascript";
+import css from "highlight.js/lib/languages/css";
+import $ from "jquery";
 
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
+import { Editor, EditorContent, EditorMenuBar } from "tiptap";
 import {
   Blockquote,
   CodeBlock,
@@ -160,11 +149,11 @@ import {
   History,
   Image,
   CodeBlockHighlight
-} from 'tiptap-extensions'
+} from "tiptap-extensions";
 export default {
   components: {
     EditorContent,
-    EditorMenuBar,
+    EditorMenuBar
   },
   data() {
     return {
@@ -173,8 +162,8 @@ export default {
           new CodeBlockHighlight({
             languages: {
               javascript,
-              css,
-            },
+              css
+            }
           }),
           new Blockquote(),
           new BulletList(),
@@ -193,7 +182,7 @@ export default {
           new Strike(),
           new Underline(),
           new History(),
-          new Image(),
+          new Image()
         ],
         content: `
           <h2>
@@ -203,18 +192,77 @@ export default {
             Fill your content here 😍
           </p>
           
-        `,
-      }),
+        `
+      })
+    };
+  },
+  methods: {
+    pasteHtmlAtCaret(html) {
+      var sel, range;
+      if (window.getSelection) {
+        // IE9 and non-IE
+        sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+          range = sel.getRangeAt(0);
+          range.deleteContents();
+
+          // Range.createContextualFragment() would be useful here but is
+          // non-standard and not supported in all browsers (IE9, for one)
+          var el = document.createElement("div");
+          el.innerHTML = html;
+          var frag = document.createDocumentFragment(),
+            node,
+            lastNode;
+          while ((node = el.firstChild)) {
+            lastNode = frag.appendChild(node);
+          }
+          range.insertNode(frag);
+
+          // Preserve the selection
+          if (lastNode) {
+            range = range.cloneRange();
+            range.setStartAfter(lastNode);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
+        }
+      } else if (document.selection && document.selection.type != "Control") {
+        // IE < 9
+        document.selection.createRange().pasteHTML(html);
+      }
     }
   },
-  beforeDestroy() {
-    this.editor.destroy()
+  mounted() {
+    this.$nextTick(() => {
+      var self = this;
+      $(".editor").on("paste", function(e) {
+        var orgEvent = e.originalEvent;
+        for (var i = 0; i < orgEvent.clipboardData.items.length; i++) {
+          if (
+            orgEvent.clipboardData.items[i].kind == "file" &&
+            orgEvent.clipboardData.items[i].type == "image/png"
+          ) {
+            var imageFile = orgEvent.clipboardData.items[i].getAsFile();
+            var fileReader = new FileReader();
+            fileReader.onloadend = function() {
+              var imgElm = `<img src="${fileReader.result}" alt="">`;
+              self.pasteHtmlAtCaret(imgElm)
+            };
+            fileReader.readAsDataURL(imageFile);
+            break;
+          }
+        }
+      });
+    });
   },
-}
+  beforeDestroy() {
+    this.editor.destroy();
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-
 pre {
   &::before {
     content: attr(data-language);

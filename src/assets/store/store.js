@@ -11,7 +11,7 @@ export const store = new Vuex.Store({
     usN: '',
     rol: '',
     ava: '',
-    dbUrl: 'https://sharing-server.herokuapp.com/api/v1'
+    dbUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/v1' : 'https://sharing-server.herokuapp.com/api/v1'
   },
   mutations:{
     checkLogin(state){
