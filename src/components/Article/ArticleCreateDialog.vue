@@ -1,72 +1,56 @@
 <template>
-  <v-card>
-    <v-toolbar dark color="primary">
-      <v-btn icon dark @click="onClose">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-      <v-toolbar-title>New Article</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn dark text @click="onClose">Save</v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
-    <v-card-text>
-      <v-container fluid>
-        <v-row>
-          <v-col class="pa-1 mt-2">
-            <v-text-field label="Author*" dense required></v-text-field>
-          </v-col>
-          <v-col md="10"></v-col>
-          <v-col cols="8" class="pa-1">
-            <v-text-field label="Title*" dense required></v-text-field>
-          </v-col>
-          <v-col cols="6" class="pa-1">
-            <v-select v-model="value" :items="items" attach chips label="Tags" dense multiple></v-select>
-          </v-col>
-          <v-col cols="12" class="pa-1">
-            <p>Content*:</p>
-            <editor-component class="editor-wrapper"></editor-component>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card-text>
-  </v-card>
+  <div style="background-color: white;">
+    <quill-editor ref="myTextEditor"
+      v-model="content"
+      :options="editorOption"
+    >
+    </quill-editor>
+  </div>
 </template>
 
 <script>
-import Editor from "../Editor/Editor";
+import hljs from 'highlight.js'
+import 'quill/dist/quill.snow.css'
+
 export default {
-  props:{
-    closeDialog: Function
-  },
-  components: {
-    "editor-component": Editor
-  },
-  data: () => ({
-    items: ["javascript", "vuejs", "css", "typescript", "react", "angular"],
-    value: []
-  }),
-  watch:{
-    $route(){
-      this.value = this.$route.query.type ? [ this.$route.query.type ] : []
-    }
-  },
-  mounted(){
-    this.value = this.$route.query.type ? [ this.$route.query.type ] : []
-  },
-  methods: {
-    onClose(){
-      this.$emit('closeDialog')
-    }
+  data() {
+    return {
+      content: ``,
+      editorOption: {
+        placeholder: 'Fill you content here',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'direction': 'rtl' }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'font': [] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'align': [] }],
+            ['clean'],
+            ['link', 'image', 'video']
+          ],
+          syntax: {
+            highlight: text => { 
+              console.log(hljs.highlightAuto(text).value)
+              return hljs.highlightAuto(text).value
+            }
+          }
+        }
+      }
+    };
   }
 };
 </script>
 
-<style lang="scss" scoped>
-.editor-wrapper {
-  border: 1px solid #aacfec;
-  border-radius: 10px;
-  margin: 0 !important;
-  padding: 20px;
+<style>
+.ql-editor{
+  font-family: "Roboto", sans-serif;
+  height: 20vh !important;
 }
 </style>

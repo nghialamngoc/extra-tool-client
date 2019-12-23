@@ -52,47 +52,52 @@
     </div>
     <div class="article-list">
       <v-row justify="center" align="center">
-        <v-col cols="11" md="8" lg="6">
-          <div class="article-one">
-            <v-row>
-              <v-col cols="6" md="5" lg="4">
-                <v-img
-                  :src="'https://www.freecodecamp.org/news/content/images/size/w2000/2019/12/desktop-cropped.jpg'"
-                ></v-img>
-              </v-col>
-              <v-col cols="6" md="7" lg="8">
-                <div class="article-one-top">
-                  <router-link to>#Web Development</router-link>
-                </div>
-                <div class="article-one-title">
-                  <router-link to="/article?id=12">Web Development in 2020: What You Should Learn</router-link>
-                </div>
-                <div class="article-one-footer d-flex align-center">
+        <v-col cols="11" md="8" lg="6" xl="5">
+          <template v-if="articleList.length > 0">
+            <div class="article-one" v-for="article in articleList" :key="article._id">
+              <v-row>
+                <v-col cols="6" md="5" lg="4">
                   <v-img
-                    max-width="40px"
-                    max-height="40px"
-                    src="https://www.freecodecamp.org/news/content/images/size/w100/2018/12/quincy-headshot-highres.png"
+                    :src="article.articleImg"
                   ></v-img>
-                  <p class="article-one-author">
-                    <router-link to>Nghia.Lam</router-link>
-                  </p>
-                  <p class="article-one-date">2 Days ago</p>
-                </div>
-              </v-col>
-            </v-row>
-          </div>
+                </v-col>
+                <v-col cols="6" md="7" lg="8" class="d-flex flex-column">
+                  <div class="article-one-top">
+                    <span v-for="(tag, index) in article.tags.split(',')" :key="index">#{{tag}}</span>
+                  </div>
+                  <div class="article-one-title">
+                    <router-link :to="'/article?id=' + article._id">{{article.title}}</router-link>
+                  </div>
+                  <v-spacer />
+                  <div class="article-one-footer d-flex align-center">
+                    <v-img
+                      max-width="40px"
+                      max-height="40px"
+                      src="https://www.freecodecamp.org/news/content/images/size/w100/2018/12/quincy-headshot-highres.png"
+                    ></v-img>
+                    <p class="article-one-author">
+                      <router-link to>{{article.author.name}}</router-link>
+                    </p>
+                    <p class="article-one-date">{{ article.createDate | moment("from") }}</p>
+                  </div>
+                </v-col>
+              </v-row>
+            </div>
+          </template>
         </v-col>
-        <v-col cols="12" md="3" lg="2">TO DO</v-col>
+        <v-col cols="12" md="3" lg="2" xl="2">TO DO</v-col>
       </v-row>
     </div>
     <v-dialog v-model="newArticleDialog" max-width="70%">
-      <article-create-dialog v-on:closeDialog="closeNewArticleDialog"></article-create-dialog>
+      <article-create-dialog></article-create-dialog>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
 import ArticleCreateDialogComponent from "../Article/ArticleCreateDialog";
+import axios from "axios";
+
 export default {
   components: {
     "article-create-dialog": ArticleCreateDialogComponent
@@ -137,12 +142,20 @@ export default {
           linkTo: "/articles?type=typescript",
           color: "blue"
         }
-      ]
+      ],
+      articleList: []
     };
   },
+  created() {
+    axios.get(this.$store.state.dbUrl + "/article").then(res => {
+      this.articleList = Object.values(res.data.data);
+    });
+  },
   computed: {
-    isShowUtilities(){
-      return this.$vuetify.breakpoint.mdAndUp && this.$store.state.isLogin === true;
+    isShowUtilities() {
+      return (
+        this.$vuetify.breakpoint.mdAndUp && this.$store.state.isLogin === true
+      );
     }
   },
   methods: {
@@ -201,10 +214,14 @@ a {
   .article-one-top {
     font-size: 12px;
     text-transform: uppercase;
+    span{
+      padding: 2px;
+      margin-right: 5px;
+    }
   }
   .article-one-title {
     margin-top: 5px;
-    font-size: 22px;
+    font-size: 25px;
     font-weight: 500;
     a {
       &:hover {
@@ -214,7 +231,7 @@ a {
     }
   }
   .article-one-footer {
-    margin-top: 5px;
+    margin-bottom: 5px;
     font-size: 13px;
     text-transform: uppercase;
     .article-one-author {
@@ -224,6 +241,20 @@ a {
     .article-one-date {
       margin: 0;
       margin-left: 10px;
+    }
+  }
+}
+
+@media screen and (min-width: 1265px) and (max-width: 1904px) {
+  .article-one {
+    .article-one-top {
+      font-size: 12px;
+    }
+    .article-one-title {
+      font-size: 21px;
+    }
+    .article-one-footer {
+      font-size: 13px;
     }
   }
 }

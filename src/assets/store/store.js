@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
     isLogin: undefined,
     isCheckLogin: false,
     usN: '',
+    usId: '',
     rol: '',
     ava: '',
     dbUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/v1' : 'https://sharing-server.herokuapp.com/api/v1'
@@ -24,7 +25,8 @@ export const store = new Vuex.Store({
               state.isLogin = true;
               state.usN = res.data.data.name;
               state.rol = res.data.data.rol;
-              state.ava = res.data.data.avatar;            
+              state.ava = res.data.data.avatar;
+              state.usId = res.data.data.usId            
             }
             else {
               state.isLogin = false;
