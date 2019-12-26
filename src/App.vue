@@ -66,8 +66,8 @@
           text
           small
         >
-          <img :src="$store.state.ava" alt="avatar" width="30px" height="30px" class="mr-2">
-          {{$store.state.usN}}
+          <img :src="$store.state.usData.usAva" alt="avatar" width="30px" height="30px" class="mr-2">
+          {{$store.state.usData.usName}}
           <v-icon right>mdi-menu-down</v-icon>
         </v-btn>
       </template>
@@ -99,8 +99,9 @@
 </template>
 
 <script>
-import LoginComponent from './components/Login/Login';
-import axios from 'axios';
+import LoginComponent from './components/LoginDialog'
+import { mapActions } from 'vuex'
+import axios from 'axios'
 
 export default {
   name: "App",
@@ -133,9 +134,10 @@ export default {
     ],
   }),
   mounted(){
-    this.$store.commit('checkLogin')
+    this.checkLogin();
   },
   methods: {
+    ...mapActions(['checkLogin', 'saveUserData']),
     nothing(){
       //TODO: will update later
     },
@@ -144,7 +146,10 @@ export default {
         axios.get(this.$store.state.dbUrl + '/user/logout', {
           withCredentials: true
         }).then(() => {
-          this.$store.commit('userLogout')
+          this.saveUserData({
+            userData: {}, 
+            isLogin: false
+          });
         });
       } catch( err ){
         console.log(err)

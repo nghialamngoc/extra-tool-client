@@ -89,18 +89,18 @@
       </v-row>
     </div>
     <v-dialog v-model="newArticleDialog" max-width="70%">
-      <article-create-dialog></article-create-dialog>
+      <app-article-create-dialog></app-article-create-dialog>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
-import ArticleCreateDialogComponent from "../Article/ArticleCreateDialog";
+import ArticleCreateDialogComponent from "../components/ArticleCreateDialog";
 import axios from "axios";
 
 export default {
   components: {
-    "article-create-dialog": ArticleCreateDialogComponent
+    "app-article-create-dialog": ArticleCreateDialogComponent
   },
   data() {
     return {

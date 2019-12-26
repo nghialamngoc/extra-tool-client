@@ -8,10 +8,12 @@ export const store = new Vuex.Store({
   state: {
     isLogin: undefined,
     isCheckLogin: false,
-    usN: '',
-    usId: '',
-    rol: '',
-    ava: '',
+    usData: {
+      usName: '',
+      usId: '',
+      usRole: '',
+      usAva: ''
+    },
     dbUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/v1' : 'https://sharing-server.herokuapp.com/api/v1'
   },
   mutations:{
@@ -20,13 +22,14 @@ export const store = new Vuex.Store({
         try{          
           axios.post(state.dbUrl + '/user', {}, {
             withCredentials: true
-          }).then( res => {            
+          }).then( res => {
+            console.log('here')
             if( res.data && res.data.status === 'success' && res.data.data){
               state.isLogin = true;
-              state.usN = res.data.data.name;
-              state.rol = res.data.data.rol;
-              state.ava = res.data.data.avatar;
-              state.usId = res.data.data.usId            
+              state.usData.usName = res.data.data.name;
+              state.usData.usRole = res.data.data.rol;
+              state.usData.usId = res.data.data.usId;
+              state.usData.usAva = res.data.data.avatar;
             }
             else {
               state.isLogin = false;
@@ -40,19 +43,30 @@ export const store = new Vuex.Store({
         }
       }
     },
-    userLogin(state, userData){
+    saveUserData(state, { userData, isLogin }){
+      console.log('NGhia', userData, isLogin)
       if( userData != null && userData != undefined ){
-        state.isLogin = true;
-        state.usN = userData.name;
-        state.rol = userData.rol;
-        state.ava = userData.avatar;   
+        state.isLogin = isLogin;
+        state.usData.usName = userData.name;
+        state.usData.usRole = userData.rol;
+        state.usData.usAva = userData.avatar;   
       }
     },
     userLogout(state){
       state.isLogin = false;
-      state.usN = '';
-      state.rol = '';
-      state.ava = '';
+      state.usData.usName = '';
+      state.usData.usRole = '';
+      state.usData.usAva = '';
     }
+  },
+  actions: {
+    checkLogin: ({ commit }) => {
+      commit('checkLogin')
+    },
+    saveUserData: ({ commit }, data) => {
+      commit('saveUserData', data)
+    }
+  },
+  modules: {
   }
 })

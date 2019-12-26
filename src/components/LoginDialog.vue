@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
+import { mapActions } from 'vuex'
 
 export default {
   props: {
@@ -61,6 +62,7 @@ export default {
     console.log('login component detroy')
   },
   methods: {
+    ...mapActions(['saveUserData']),
     submit() {
       if (this.$refs.form.validate()) {
         axios.post( this.$store.state.dbUrl + '/user/login',{
@@ -73,7 +75,10 @@ export default {
           this.isLoading = false;
           const status = res.data.status;
           if( status === 'success' ){
-            this.$store.commit('userLogin', res.data.data)
+            this.saveUserData({
+              userData: res.data.data, 
+              isLogin: true
+            });
             this.$emit('closeDialog');
           }
           else {
@@ -85,7 +90,7 @@ export default {
         }).catch(err => {
           this.isLoading = false;
           console.log(err);
-          this.$emit('close')
+          this.$emit('closeDialog')
           this.$router.push('/error')
         });
         this.isLoading = true;
