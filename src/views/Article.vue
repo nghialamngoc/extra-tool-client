@@ -19,7 +19,7 @@
               <p class="ma-0 author-desc">A Deverloper at Global Cybersoft</p>
             </div>
           </div>
-          <div class="content mt-10">
+          <div class="article__content mt-10">
             <div v-html="data.content">
 
             </div>

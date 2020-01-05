@@ -162,8 +162,8 @@ export default {
           new CodeBlockHighlight({
             languages: {
               javascript,
-              css
-            }
+              css,
+            },
           }),
           new Blockquote(),
           new BulletList(),
@@ -184,15 +184,7 @@ export default {
           new History(),
           new Image()
         ],
-        content: `
-          <h2>
-            Hi there,
-          </h2>
-          <p>
-            Fill your content here 😍
-          </p>
-          
-        `
+        content: '',
       })
     };
   },
@@ -262,7 +254,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 pre {
   &::before {
     content: attr(data-language);

@@ -89,7 +89,7 @@
       </v-row>
     </div>
     <v-dialog v-model="newArticleDialog" max-width="70%">
-      <app-article-create-dialog></app-article-create-dialog>
+      <app-article-create-dialog @closeDialog='closeNewArticleDialog' @addNewArticle='addNewArticle'></app-article-create-dialog>
     </v-dialog>
   </v-container>
 </template>
@@ -141,6 +141,12 @@ export default {
           text: "Typescript",
           linkTo: "/articles?type=typescript",
           color: "blue"
+        },
+        {
+          icon: "mdi-alpha-a-box",
+          text: "Algorithms",
+          linkTo: "/articles?type=algorithms",
+          color: "yellow"
         }
       ],
       articleList: []
@@ -164,6 +170,16 @@ export default {
     },
     closeNewArticleDialog() {
       this.newArticleDialog = false;
+    },
+    addNewArticle(data){
+      this.articleList.push({
+        ...data,
+        author:{
+          avatar: this.$store.state.usData.usAva,
+          _id: this.$store.state.usData.usId,
+          name: this.$store.state.usData.usName,
+        } 
+      })
     }
   }
 };

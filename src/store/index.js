@@ -22,8 +22,7 @@ export const store = new Vuex.Store({
         try{          
           axios.post(state.dbUrl + '/user', {}, {
             withCredentials: true
-          }).then( res => {
-            console.log('here')
+          }).then( res => {          
             if( res.data && res.data.status === 'success' && res.data.data){
               state.isLogin = true;
               state.usData.usName = res.data.data.name;
