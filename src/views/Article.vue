@@ -1,5 +1,33 @@
 <template>
   <v-container fluid>
+    <v-navigation-drawer
+      expand-on-hover
+      permanent
+      fixed
+      right
+      class="position_top-50 utilities"
+      mini-variant-width="auto"
+      height="auto"
+      floating
+      color="#FAFAFA"
+      width="auto"
+      v-if="isShowUtilities"
+    >
+      <v-list class="pa-0">
+        <v-list-item link @click="openDialog">
+          <v-list-item-icon>
+            <v-icon class="fs-17">mdi-file-document-edit-outline</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Edit</v-list-item-title>
+        </v-list-item>
+        <v-list-item link >
+          <v-list-item-icon>
+            <v-icon class="fs-17">mdi-delete-alert-outline</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Delete</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
     <v-row justify="center" align="center">
       <v-col cols="11" md="8" lg="7">
         <div class="article-top mt-10" v-if="data._id">
@@ -27,17 +55,30 @@
         </div>
       </v-col>
     </v-row>
+    <v-dialog v-model="editArticleDialog" max-width="70%">
+      <app-article-edit-dialog v-bind:articleData="data" @closeDialog='closeDialog' @editArticle='editArticle'></app-article-edit-dialog>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
+import ArticleEditDialogComponent from "../components/ArticleEditDialog";
 import axios from "axios";
 
 export default {
+  components:{
+    "app-article-edit-dialog": ArticleEditDialogComponent
+  },
   data(){
     return{
+      editArticleDialog: false,
       data: {},
       articleId: ''
+    }
+  },
+  computed: {
+    isShowUtilities(){
+      return this.$vuetify.breakpoint.mdAndUp && this.$store.state.isLogin === true && this.$store.state.usData.usRole == 'Admin';
     }
   },
   created(){
@@ -46,6 +87,17 @@ export default {
      .then(res => {
        this.data = res.data.data
      })
+  },
+  methods:{
+    closeDialog(){
+
+    },
+    editArticle(){
+
+    },
+    openDialog(){
+      this.editArticleDialog = true
+    }
   }
 };
 </script>

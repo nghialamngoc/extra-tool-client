@@ -186,18 +186,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.utilities {
-  padding: 0 !important;
-  border: 1px solid #d6d3d3 !important;
-  border-right: none !important;
-  border-radius: 0 !important;
-  border-top-left-radius: 10px !important;
-  border-bottom-left-radius: 10px !important;
-  -webkit-box-shadow: 4px 10px 20px -1px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 4px 10px 20px -1px rgba(0, 0, 0, 0.4);
-  box-shadow: 4px 10px 20px -1px rgba(0, 0, 0, 0.4);
-}
-
 a {
   text-decoration: none;
   color: black !important;
