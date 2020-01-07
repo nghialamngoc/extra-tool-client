@@ -56,7 +56,7 @@
       </v-col>
     </v-row>
     <v-dialog v-model="editArticleDialog" max-width="70%">
-      <app-article-edit-dialog v-bind:articleData="data" @closeDialog='closeDialog' @editArticle='editArticle'></app-article-edit-dialog>
+      <app-article-edit-dialog v-bind:articleData="data" @closeDialog='closeDialog' @update='update'></app-article-edit-dialog>
     </v-dialog>
   </v-container>
 </template>
@@ -90,10 +90,10 @@ export default {
   },
   methods:{
     closeDialog(){
-
+      this.editArticleDialog = false;
     },
-    editArticle(){
-
+    update(newData){
+      this.data = { ...newData }
     },
     openDialog(){
       this.editArticleDialog = true
