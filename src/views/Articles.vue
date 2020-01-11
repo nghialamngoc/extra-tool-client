@@ -52,18 +52,21 @@
     </div>
     <div class="article-list">
       <v-row justify="center" align="center">
-        <v-col cols="11" md="8" lg="6" xl="5">
-          <template v-if="articleList.length > 0">
+        <template v-if="loading">
+          <div style="margin-top:200px">
+            <v-progress-circular :size="50" color="primary" indeterminate></v-progress-circular>
+          </div>
+        </template>
+        <template v-if="articleList.length > 0 && !loading">
+          <v-col cols="11" md="8" lg="6" xl="5">
             <div class="article-one" v-for="article in articleList" :key="article._id">
               <v-row>
                 <v-col cols="6" md="5" lg="4">
-                  <v-img
-                    :src="article.articleImg"
-                  ></v-img>
+                  <v-img :src="article.articleImg"></v-img>
                 </v-col>
                 <v-col cols="6" md="7" lg="8" class="d-flex flex-column">
                   <div class="article-one-top">
-                    <span v-for="(tag, index) in article.tags.split(',')" :key="index">#{{tag}}</span>
+                    <span>#{{article.tags}}</span>
                   </div>
                   <div class="article-one-title">
                     <router-link :to="'/article?id=' + article._id">{{article.title}}</router-link>
@@ -83,13 +86,16 @@
                 </v-col>
               </v-row>
             </div>
-          </template>
-        </v-col>
-        <v-col cols="12" md="3" lg="2" xl="2">TO DO</v-col>
+          </v-col>
+          <v-col cols="12" md="3" lg="2" xl="2">TO DO</v-col>
+        </template>
       </v-row>
     </div>
     <v-dialog v-model="newArticleDialog" max-width="70%">
-      <app-article-create-dialog @closeDialog='closeNewArticleDialog' @addNewArticle='addNewArticle'></app-article-create-dialog>
+      <app-article-create-dialog
+        @closeDialog="closeNewArticleDialog"
+        @addNewArticle="addNewArticle"
+      ></app-article-create-dialog>
     </v-dialog>
   </v-container>
 </template>
@@ -149,13 +155,17 @@ export default {
           color: "yellow"
         }
       ],
-      articleList: []
+      articleList: [],
+      loading: false
     };
   },
+  watch: {
+    $route: function(to) {
+      this.getData(to.query.type || "");
+    }
+  },
   created() {
-    axios.get(this.$store.state.dbUrl + "/article").then(res => {
-      this.articleList = Object.values(res.data.data);
-    });
+    this.getData(this.$route.query.type || "");
   },
   computed: {
     isShowUtilities() {
@@ -165,21 +175,28 @@ export default {
     }
   },
   methods: {
+    getData(type) {
+      this.loading = true;
+      axios.get(this.$store.state.dbUrl + "/article?type=" + type).then(res => {
+        this.articleList = Object.values(res.data.data);
+        this.loading = false;
+      });
+    },
     openNewArticleDialog() {
       this.newArticleDialog = true;
     },
     closeNewArticleDialog() {
       this.newArticleDialog = false;
     },
-    addNewArticle(data){
+    addNewArticle(data) {
       this.articleList.push({
         ...data,
-        author:{
+        author: {
           avatar: this.$store.state.usData.usAva,
           _id: this.$store.state.usData.usId,
-          name: this.$store.state.usData.usName,
-        } 
-      })
+          name: this.$store.state.usData.usName
+        }
+      });
     }
   }
 };
@@ -218,7 +235,7 @@ a {
   .article-one-top {
     font-size: 12px;
     text-transform: uppercase;
-    span{
+    span {
       padding: 2px;
       margin-right: 5px;
     }

@@ -95,6 +95,8 @@ export default {
           content: this.$refs.editor.editor.getHTML(),
           isReviewed: this.isReviewed,
           createDate: Date.now()
+        },{
+          withCredentials: true
         })
         .then(res => {
           this.loading = false;

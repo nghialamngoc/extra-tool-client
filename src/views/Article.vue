@@ -20,7 +20,7 @@
           </v-list-item-icon>
           <v-list-item-title>Edit</v-list-item-title>
         </v-list-item>
-        <v-list-item link >
+        <v-list-item link @click="openDeleteConfirm">
           <v-list-item-icon>
             <v-icon class="fs-17">mdi-delete-alert-outline</v-icon>
           </v-list-item-icon>
@@ -48,15 +48,37 @@
             </div>
           </div>
           <div class="article__content mt-10">
-            <div v-html="data.content">
-
-            </div>
+            <div v-html="data.content"></div>
           </div>
         </div>
       </v-col>
     </v-row>
+    <v-dialog v-model="deleteConfirmDialog" max-width="400">
+      <v-card class="confirm-dialog">
+        <div class="d-flex flex-no-wrap justify-space-between pt-7">
+          <v-icon class="ml-3 mb-3" size="80" tile>
+            mdi-delete-empty-outline
+          </v-icon>
+          <div class="pr-2">
+            <v-card-title class="headline">Are you sure?</v-card-title>
+
+            <v-card-subtitle>Do you realy want to delete this article.</v-card-subtitle>
+          </div>
+        </div>
+      
+        <v-card-actions class="mt-6">
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="deleteConfirmDialog = false">No</v-btn>
+          <v-btn text @click="deleteArticle" class="button__hover">Yes</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="editArticleDialog" max-width="70%">
-      <app-article-edit-dialog v-bind:articleData="data" @closeDialog='closeDialog' @update='update'></app-article-edit-dialog>
+      <app-article-edit-dialog
+        v-bind:articleData="data"
+        @closeDialog="closeDialog"
+        @update="update"
+      ></app-article-edit-dialog>
     </v-dialog>
   </v-container>
 </template>
@@ -66,44 +88,65 @@ import ArticleEditDialogComponent from "../components/ArticleEditDialog";
 import axios from "axios";
 
 export default {
-  components:{
+  components: {
     "app-article-edit-dialog": ArticleEditDialogComponent
   },
-  data(){
-    return{
+  data() {
+    return {
+      deleteConfirmDialog: false,
       editArticleDialog: false,
       data: {},
-      articleId: ''
-    }
+      articleId: ""
+    };
   },
   computed: {
-    isShowUtilities(){
-      return this.$vuetify.breakpoint.mdAndUp && this.$store.state.isLogin === true && this.$store.state.usData.usRole == 'Admin';
+    isShowUtilities() {
+      return (
+        this.$vuetify.breakpoint.mdAndUp &&
+        this.$store.state.isLogin === true &&
+        this.$store.state.usData.usRole == "Admin"
+      );
     }
   },
-  created(){
-    this.articleId = this.$route.query.id
-    axios.get(this.$store.state.dbUrl + '/article/search?articleid=' + this.articleId)
-     .then(res => {
-       this.data = res.data.data
-     })
+  created() {
+    this.articleId = this.$route.query.id;
+    axios.get( this.$store.state.dbUrl + '/article/search?articleid=' + this.articleId )
+      .then( res => {
+        this.data = res.data.data;
+      });
   },
-  methods:{
-    closeDialog(){
+  methods: {
+    closeDialog() {
       this.editArticleDialog = false;
     },
-    update(newData){
-      this.data = { ...newData }
+    update(newData) {
+      this.data = { ...newData };
     },
-    openDialog(){
-      this.editArticleDialog = true
+    openDialog() {
+      this.editArticleDialog = true;
+    },
+    openDeleteConfirm() {
+      this.deleteConfirmDialog = true;
+    },
+    deleteArticle(){
+      axios.delete( this.$store.state.dbUrl + '/article?articleId=' + this.data._id, { withCredentials: true })
+        .then( () => {
+          this.deleteConfirmDialog = false;
+          this.$router.go(-1);
+        })
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-a{
+.button__hover{
+  color: #fbc3c3;
+  &:hover{
+    color: red;
+  }
+}
+a {
   text-decoration: none;
   color: black !important;
 }
@@ -114,16 +157,16 @@ a{
     font-size: 14px;
   }
   .article-top-title {
-    h1{
+    h1 {
       font-size: 34px;
       font-weight: 500;
     }
   }
-  .author-name{
+  .author-name {
     font-weight: 500;
     font-size: 16px;
   }
-  .author-desc{
+  .author-desc {
     font-size: 13px;
     font-weight: 400;
   }
