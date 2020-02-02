@@ -43,7 +43,6 @@ export const store = new Vuex.Store({
       }
     },
     saveUserData(state, { userData, isLogin }){
-      console.log('NGhia', userData, isLogin)
       if( userData != null && userData != undefined ){
         state.isLogin = isLogin;
         state.usData.usName = userData.name;

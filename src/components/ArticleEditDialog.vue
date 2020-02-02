@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import Editor from "./Editor";
+import Editor from "./EditorQuill";
 import axios from "axios";
 
 export default {
@@ -64,7 +64,7 @@ export default {
   data: () => ({
     loading: false,
     valid: false,
-    items: ["javascript", "vuejs", "css", "typescript", "react", "angular", "algorithms"],
+    items: ["javascript", "vuejs", "css", "typescript", "react", "design", "algorithms"],
     tagValue: [],
     isReviewed: false,
     titleInputValue: "",
@@ -83,7 +83,7 @@ export default {
     this.articleId = this.articleData._id
   },
   mounted(){
-    this.$refs.editor.editor.setContent(this.articleData.content)
+    this.$refs.editor.htmlForEditor = this.articleData.content;
   },
   methods: {
     close(){
@@ -97,7 +97,7 @@ export default {
           authorId: this.$store.state.usData.usId,
           title: this.titleInputValue,
           tags: this.tagValue.join(","),
-          content: this.$refs.editor.editor.getHTML(),
+          content: this.$refs.editor.htmlForEditor,
           isReviewed: this.isReviewed,
           editDate: Date.now()
         },{
@@ -117,17 +117,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.editor-wrapper {
-  border: 1px solid #ccc;
-  margin: 0 !important;
-  .menubar {
-    border-bottom: 1px solid #ccc;
-    padding: 5px;
-  }
-  .editor__content {
-    padding: 0 10px 0 10px;
-    font-size: 15px;
-  }
-}
+<style lang="scss" scoped>
+
 </style>

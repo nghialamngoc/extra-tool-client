@@ -140,6 +140,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .button__hover{
   color: #fbc3c3;
   &:hover{

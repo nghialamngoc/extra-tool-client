@@ -1,3 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+html{
+  overflow-y: auto;
+}
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+p {
+  margin-bottom: 0 !important;
+}
+
 .position_top-50{
   top: 50% !important
 }
@@ -6,12 +20,9 @@
   font-size: 30px !important;
 }
 
-.v-dialog{
-  margin-top: -20px !important;
-}
-
 //article
 .article__content{
+  line-height: 1.6;
   code{
     background-color: #272727;
     color: white;
@@ -42,4 +53,12 @@
   height: 200px;
   background-position: 0 100%;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23E4ECEE' fill-opacity='1' d='M0,0L60,53.3C120,107,240,213,360,240C480,267,600,213,720,202.7C840,192,960,224,1080,218.7C1200,213,1320,171,1380,149.3L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+//ql-editor
+.ql-editor{
+  line-height: 1.6 !important;
+  font-size: 15px !important;
+  color: black;
+  height: 30vh;
 }

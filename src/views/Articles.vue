@@ -91,7 +91,7 @@
         </template>
       </v-row>
     </div>
-    <v-dialog v-model="newArticleDialog" max-width="70%">
+    <v-dialog v-model="displayCreateArticleDialog" fullscreen>
       <app-article-create-dialog
         @closeDialog="closeNewArticleDialog"
         @addNewArticle="addNewArticle"
@@ -110,25 +110,19 @@ export default {
   },
   data() {
     return {
-      newArticleDialog: false,
+      displayCreateArticleDialog: false,
       tags: [
-        {
-          icon: "mdi-angular",
-          text: "Angular",
-          linkTo: "/articles?type=angular",
-          color: "red"
-        },
-        {
-          icon: "mdi-react",
-          text: "React",
-          linkTo: "/articles?type=react",
-          color: "blue"
-        },
         {
           icon: "mdi-vuejs",
           text: "Vuejs",
           linkTo: "/articles?type=vuejs",
           color: "green"
+        },
+        {
+          icon: "mdi-draw",
+          text: "Design",
+          linkTo: "/articles?type=design",
+          color: "blue"
         },
         {
           icon: "mdi-language-javascript",
@@ -183,10 +177,10 @@ export default {
       });
     },
     openNewArticleDialog() {
-      this.newArticleDialog = true;
+      this.displayCreateArticleDialog = true;
     },
     closeNewArticleDialog() {
-      this.newArticleDialog = false;
+      this.displayCreateArticleDialog = false;
     },
     addNewArticle(data) {
       this.articleList.push({

@@ -49,7 +49,7 @@
     <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="#0A0A23" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
-        <span>Sharing And Learning</span>
+        <span>Dev'Coffee</span>
       </v-toolbar-title>
       <v-spacer />
       <v-menu
