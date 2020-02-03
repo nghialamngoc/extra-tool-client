@@ -1,15 +1,20 @@
 <template>
   <div class="toggle">
-    <input type="checkbox" v-model="model">
+    <input type="checkbox" v-model="status">
   </div>
 </template>
 
 <script>
 export default {
+  props: ['isActive'],
   data(){
     return {
-      model: false
+      status: true
     }
+  },
+  mounted(){
+    this.status = this.isActive ? this.isActive : true;
+    
   }
 }
 </script>

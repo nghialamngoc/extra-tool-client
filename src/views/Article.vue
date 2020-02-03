@@ -73,7 +73,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="editArticleDialog" max-width="70%">
+    <v-dialog v-model="editArticleDialog" fullscreen>
       <app-article-edit-dialog
         v-bind:articleData="data"
         @closeDialog="closeDialog"

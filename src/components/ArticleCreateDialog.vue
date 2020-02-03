@@ -25,7 +25,7 @@
             <v-col cols="2" class="pa-1 d-flex align-center">
               <p class="ma-2">Active:</p>
               <div style="height:100%;">
-                <neumorphism-toggle></neumorphism-toggle>
+                <neumorphism-toggle ref="activeToggle"></neumorphism-toggle>
               </div>
             </v-col>
             <v-col cols="6" class="pa-1">
@@ -41,7 +41,6 @@
       </v-container>
       <neumorphism-button :text="'Save'" v-on:func='onSave()'></neumorphism-button>
     </v-card-text>
-    
   </v-card>
 </template>
 
@@ -63,30 +62,7 @@ export default {
     'neumorphism-toggle': NeumorphismToggle
   },
   data: vm => ({
-    froalaConfig: {
-      imagePasteProcess: true,
-      imageDefaultWidth: "100%",
-      imageDefaultAlign: "left",
-      events: {
-        "image.beforeUpload": function(images) {
-          var editor = this;
-          if (images.length) {
-            // Create a File Reader.
-            var reader = new FileReader();
-            // Set the reader to insert images when they are loaded.
-            reader.onload = function(e) {
-              var result = e.target.result;
-              editor.image.insert(result, null, null, editor.image.get());
-            };
-            // Read image as base64.
-            reader.readAsDataURL(images[0]);
-          }
-          editor.popups.hideAll();
-          // Stop default upload chain.
-          return false;
-        }
-      }
-    },
+    froalaConfig: vm.$store.state.froalaConfig,
     content: "",
     loading: false,
     valid: false,
@@ -132,7 +108,7 @@ export default {
             //content: this.$refs.editor.editor.getHTML(),
             //content: this.$refs.editor.htmlForEditor,
             content: this.content,
-            isReviewed: this.isReviewed,
+            isReviewed: this.$refs['activeToggle'].$data.status,
             createDate: Date.now()
           },
           {
@@ -168,9 +144,5 @@ export default {
 // }
 .createDialog{
   background: #ececec !important;
-  
-}
-.fr-popup{
-  z-index: 999 !important;
 }
 </style>

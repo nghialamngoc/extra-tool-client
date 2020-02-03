@@ -1,14 +1,10 @@
 <template>
-  <v-card :loading="loading">
+  <v-card :loading="loading" class="editDialog">
     <v-toolbar dark color="primary">
       <v-btn icon dark @click="close">
         <v-icon>mdi-close</v-icon>
       </v-btn>
-      <v-toolbar-title>New Article</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn dark text :disabled="!valid" @click="save">Save</v-btn>
-      </v-toolbar-items>
+      <v-toolbar-title>Edit Article</v-toolbar-title>
     </v-toolbar>
     <v-card-text>
       <v-container fluid>
@@ -30,8 +26,11 @@
                 :rules="titleRules"
               ></v-text-field>
             </v-col>
-            <v-col cols="1" class="pa-1">
-              <v-switch v-model="isReviewed" :disabled="!($store.state.usData.usRole == 'Admin')" :label="'Active'" dense class="ml-4"></v-switch>
+            <v-col cols="2" class="pa-1 d-flex align-center">
+              <p class="ma-2">Active:</p>
+              <div style="height:100%;">
+                <neumorphism-toggle ref="activeToggle"></neumorphism-toggle>
+              </div>
             </v-col>
             <v-col cols="6" class="pa-1">
               <v-select v-model="tagValue" :items="items" attach chips label="Tags" dense multiple></v-select>
@@ -39,18 +38,22 @@
             <v-col md="6"></v-col>
             <v-col cols="12" class="pa-1">
               <p>Content*:</p>
-              <editor-component class="editor-wrapper" ref="editor"></editor-component>
+              <froala :tag="'textarea'" :config="froalaConfig" v-model="content"></froala>
             </v-col>
           </v-row>
         </v-form>
       </v-container>
+      <neumorphism-button :text="'Save'" v-on:func='save()'></neumorphism-button>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import Editor from "./EditorQuill";
-import axios from "axios";
+//<editor-component class="editor-wrapper" ref="editor"></editor-component>
+//import Editor from './EditorQuill';
+import axios from 'axios';
+import NeumorphismButton from '../components/NeumorphismButton'
+import NeumorphismToggle from '../components/NeumorphimsmToggle'
 
 export default {
   props: {
@@ -59,9 +62,13 @@ export default {
     articleData: {}
   },
   components: {
-    "editor-component": Editor
+    //'editor-component': Editor,
+    'neumorphism-button': NeumorphismButton,
+    'neumorphism-toggle': NeumorphismToggle
   },
-  data: () => ({
+  data: vm => ({
+    froalaConfig: vm.$store.state.froalaConfig,
+    content: "",
     loading: false,
     valid: false,
     items: ["javascript", "vuejs", "css", "typescript", "react", "design", "algorithms"],
@@ -76,6 +83,7 @@ export default {
     articleId: ''
   }),
   created(){
+    this.content = this.articleData.content;
     this.tagValue.push(this.articleData.tags);
     this.authorInputValue = this.articleData.author.name;
     this.titleInputValue = this.articleData.title;
@@ -83,7 +91,7 @@ export default {
     this.articleId = this.articleData._id
   },
   mounted(){
-    this.$refs.editor.htmlForEditor = this.articleData.content;
+    //this.$refs.editor.htmlForEditor = this.articleData.content;
   },
   methods: {
     close(){
@@ -117,6 +125,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.editDialog{
+  background: #ececec !important;
+}
 
 </style>

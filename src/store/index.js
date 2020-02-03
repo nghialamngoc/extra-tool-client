@@ -6,6 +6,30 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
+    froalaConfig: {
+      imagePasteProcess: true,
+      imageDefaultWidth: "100%",
+      imageDefaultAlign: "left",
+      events: {
+        "image.beforeUpload": function(images) {
+          var editor = this;
+          if (images.length) {
+            // Create a File Reader.
+            var reader = new FileReader();
+            // Set the reader to insert images when they are loaded.
+            reader.onload = function(e) {
+              var result = e.target.result;
+              editor.image.insert(result, null, null, editor.image.get());
+            };
+            // Read image as base64.
+            reader.readAsDataURL(images[0]);
+          }
+          editor.popups.hideAll();
+          // Stop default upload chain.
+          return false;
+        }
+      }
+    },
     isLogin: undefined,
     isCheckLogin: false,
     usData: {
