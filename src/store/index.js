@@ -79,7 +79,7 @@ export const store = new Vuex.Store({
       state.usData.usName = '';
       state.usData.usRole = '';
       state.usData.usAva = '';
-    }
+    },
   },
   actions: {
     checkLogin: ({ commit }) => {

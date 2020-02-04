@@ -11,16 +11,21 @@
       floating
       color="#FAFAFA"
       width="auto"
-      v-if="isShowUtilities"
     >
       <v-list class="pa-0">
-        <v-list-item link @click="openDialog">
+        <v-list-item link @click="goBack">
+          <v-list-item-icon>
+            <v-icon class="fs-17">mdi-undo</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Go Back</v-list-item-title>
+        </v-list-item>
+        <v-list-item link @click="openDialog" v-if="isShowUtilities">
           <v-list-item-icon>
             <v-icon class="fs-17">mdi-file-document-edit-outline</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Edit</v-list-item-title>
         </v-list-item>
-        <v-list-item link @click="openDeleteConfirm">
+        <v-list-item link @click="openDeleteConfirm" v-if="isShowUtilities">
           <v-list-item-icon>
             <v-icon class="fs-17">mdi-delete-alert-outline</v-icon>
           </v-list-item-icon>
@@ -56,16 +61,14 @@
     <v-dialog v-model="deleteConfirmDialog" max-width="400">
       <v-card class="confirm-dialog">
         <div class="d-flex flex-no-wrap justify-space-between pt-7">
-          <v-icon class="ml-3 mb-3" size="80" tile>
-            mdi-delete-empty-outline
-          </v-icon>
+          <v-icon class="ml-3 mb-3" size="80" tile>mdi-delete-empty-outline</v-icon>
           <div class="pr-2">
             <v-card-title class="headline">Are you sure?</v-card-title>
 
             <v-card-subtitle>Do you realy want to delete this article.</v-card-subtitle>
           </div>
         </div>
-      
+
         <v-card-actions class="mt-6">
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" text @click="deleteConfirmDialog = false">No</v-btn>
@@ -110,12 +113,18 @@ export default {
   },
   created() {
     this.articleId = this.$route.query.id;
-    axios.get( this.$store.state.dbUrl + '/article/search?articleid=' + this.articleId )
-      .then( res => {
+    axios
+      .get(
+        this.$store.state.dbUrl + "/article/search?articleid=" + this.articleId
+      )
+      .then(res => {
         this.data = res.data.data;
       });
   },
   methods: {
+    goBack(){
+      this.$router.go(-1);
+    },
     closeDialog() {
       this.editArticleDialog = false;
     },
@@ -128,22 +137,25 @@ export default {
     openDeleteConfirm() {
       this.deleteConfirmDialog = true;
     },
-    deleteArticle(){
-      axios.delete( this.$store.state.dbUrl + '/article?articleId=' + this.data._id, { withCredentials: true })
-        .then( () => {
+    deleteArticle() {
+      axios
+        .delete(
+          this.$store.state.dbUrl + "/article?articleId=" + this.data._id,
+          { withCredentials: true }
+        )
+        .then(() => {
           this.deleteConfirmDialog = false;
           this.$router.go(-1);
-        })
+        });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-
-.button__hover{
+.button__hover {
   color: #fbc3c3;
-  &:hover{
+  &:hover {
     color: red;
   }
 }

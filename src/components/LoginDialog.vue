@@ -6,8 +6,12 @@
     </v-toolbar>
     <v-card-text class="pb-2">
       <v-form ref="form" v-model="valid" lazy-validation>
-        <br v-if="!errorMessage">
-        <p v-if="errorMessage" class="pa-4 mb-0 red--text">{{errorMessage}}</p>
+        <br v-if="!errorMessage && !notifyMessage">
+        <p v-if="errorMessage" class="pt-4 mb-0 red--text font-weight-medium font-italic subtitle-1">- {{errorMessage}}</p>
+        <div v-if="notifyMessage" class="pt-4 mb-0 subtitle-1 d-flex align-center ">
+          <v-icon class="yellow--text text--darken-3 fs-35">mdi-alert-box-outline</v-icon>
+          <span> {{notifyMessage}}</span>
+        </div>
         <v-text-field
           v-model="email"
           :rules="emailRules"
@@ -53,6 +57,7 @@ export default {
       ],
       passwordRules: [v => !!v || "Password is required"],
       errorMessage: "",
+      notifyMessage: "",
       isLoading: false
     };
   },

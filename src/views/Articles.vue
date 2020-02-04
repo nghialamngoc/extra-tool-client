@@ -12,16 +12,15 @@
         floating
         color="#FAFAFA"
         width="auto"
-        v-if="isShowUtilities"
       >
         <v-list class="pa-0">
-          <v-list-item link>
+          <v-list-item link @click="goBack">
             <v-list-item-icon>
-              <v-icon class="fs-17">mdi-settings</v-icon>
+              <v-icon class="fs-17">mdi-undo</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Settings</v-list-item-title>
+            <v-list-item-title>Go Back</v-list-item-title>
           </v-list-item>
-          <v-list-item link @click="openNewArticleDialog">
+          <v-list-item link @click="openNewArticleDialog" v-if="isShowUtilities">
             <v-list-item-icon>
               <v-icon class="fs-17">mdi-shape-square-plus</v-icon>
             </v-list-item-icon>
@@ -163,12 +162,13 @@ export default {
   },
   computed: {
     isShowUtilities() {
-      return (
-        this.$vuetify.breakpoint.mdAndUp && this.$store.state.isLogin === true
-      );
+      return this.$vuetify.breakpoint.mdAndUp;
     }
   },
   methods: {
+    goBack(){
+      this.$router.go(-1);
+    },
     getData(type) {
       this.loading = true;
       axios.get(this.$store.state.dbUrl + "/article?type=" + type).then(res => {
@@ -177,7 +177,10 @@ export default {
       });
     },
     openNewArticleDialog() {
-      this.displayCreateArticleDialog = true;
+      if( this.$store.state.isLogin === true )
+        this.displayCreateArticleDialog = true;
+      else
+        this.$emit('login', 'To create a new article you need to login first!!!');
     },
     closeNewArticleDialog() {
       this.displayCreateArticleDialog = false;

@@ -87,7 +87,7 @@
       </v-btn>
     </v-app-bar>
     <v-content>
-      <router-view></router-view>
+      <router-view @login="openLoginDialog"></router-view>
     </v-content>
     <v-dialog
       v-model="isOpenLoginDialog"
@@ -155,11 +155,14 @@ export default {
         console.log(err)
       }
     },
-    openLoginDialog(){
+    openLoginDialog( notifyMessage ){
       if(this.$refs.loginComponent){
-        this.$refs.loginComponent.$data.errorMessage = ''
+        this.$refs.loginComponent.$data.notifyMessage = '';
+        this.$refs.loginComponent.$data.errorMessage = '';
         this.$refs.loginComponent.$refs.form.reset();
       }
+      if( notifyMessage )
+        this.$refs.loginComponent.$data.notifyMessage = notifyMessage;
       this.isOpenLoginDialog = true;
     },
     closeLoginDialog(){
