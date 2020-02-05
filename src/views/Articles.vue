@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="article-list">
-      <v-row justify="center" align="center">
+      <v-row justify="center">
         <template v-if="loading">
           <div style="margin-top:200px">
             <v-progress-circular :size="50" color="primary" indeterminate></v-progress-circular>
@@ -86,7 +86,11 @@
               </v-row>
             </div>
           </v-col>
-          <v-col cols="12" md="3" lg="2" xl="2">TO DO</v-col>
+          <v-col cols="11" md="3" lg="2" xl="2">
+            <div class="search-wrapper mt-10">
+              <neumorphimsm-input></neumorphimsm-input>
+            </div>
+          </v-col>
         </template>
       </v-row>
     </div>
@@ -100,12 +104,14 @@
 </template>
 
 <script>
-import ArticleCreateDialogComponent from "../components/ArticleCreateDialog";
+import ArticleCreateDialogComponent from '../components/ArticleCreateDialog';
+import NeumorphimsmInput from '../components/NeumorphimsmInput'
 import axios from "axios";
 
 export default {
   components: {
-    "app-article-create-dialog": ArticleCreateDialogComponent
+    'app-article-create-dialog': ArticleCreateDialogComponent,
+    'neumorphimsm-input': NeumorphimsmInput
   },
   data() {
     return {
@@ -207,6 +213,8 @@ a {
 
 .container {
   padding: 0;
+  background-color: #e6e6e6;
+  min-height: 95vh;
 }
 
 .article-top {
