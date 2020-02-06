@@ -58,39 +58,49 @@
         </template>
         <template v-if="articleList.length > 0 && !loading">
           <v-col cols="11" md="8" lg="6" xl="5">
-            <div class="article-one" v-for="article in articleList" :key="article._id">
-              <v-row>
-                <v-col cols="6" md="5" lg="4">
-                  <v-img :src="article.articleImg"></v-img>
-                </v-col>
-                <v-col cols="6" md="7" lg="8" class="d-flex flex-column">
-                  <div class="article-one-top">
-                    <span>#{{article.tags}}</span>
-                  </div>
-                  <div class="article-one-title">
-                    <router-link :to="'/article?id=' + article._id">{{article.title}}</router-link>
-                  </div>
-                  <v-spacer />
-                  <div class="article-one-footer d-flex align-center">
-                    <v-img
-                      max-width="40px"
-                      max-height="40px"
-                      src="https://www.freecodecamp.org/news/content/images/size/w100/2018/12/quincy-headshot-highres.png"
-                    ></v-img>
-                    <p class="article-one-author">
-                      <router-link to>{{article.author.name}}</router-link>
-                    </p>
-                    <p class="article-one-date">{{ article.createDate | moment("from") }}</p>
-                  </div>
-                </v-col>
-              </v-row>
-            </div>
+            <template v-if="articleListShow.length > 0">
+              <div class="article-one" v-for="article in articleListShow" :key="article._id">
+                <v-row>
+                  <v-col cols="6" md="5" lg="4">
+                    <v-img :src="article.articleImg"></v-img>
+                  </v-col>
+                  <v-col cols="6" md="7" lg="8" class="d-flex flex-column">
+                    <div class="article-one-top">
+                      <span>#{{article.tags}}</span>
+                    </div>
+                    <div class="article-one-title">
+                      <router-link :to="'/article?id=' + article._id">{{article.title}}</router-link>
+                    </div>
+                    <v-spacer />
+                    <div class="article-one-footer d-flex align-center">
+                      <v-img
+                        max-width="40px"
+                        max-height="40px"
+                        src="https://www.freecodecamp.org/news/content/images/size/w100/2018/12/quincy-headshot-highres.png"
+                      ></v-img>
+                      <p class="article-one-author">
+                        <router-link to>{{article.author.name}}</router-link>
+                      </p>
+                      <p class="article-one-date">{{ article.createDate | moment("from") }}</p>
+                    </div>
+                  </v-col>
+                </v-row>
+              </div>
+            </template>
+            <template v-else>
+              <h2 class="mt-10">Nothing...</h2>
+            </template>
           </v-col>
           <v-col cols="11" md="3" lg="2" xl="2">
             <div class="search-wrapper mt-10">
-              <neumorphimsm-input></neumorphimsm-input>
+              <neumorphimsm-input @func="searchStringChange"></neumorphimsm-input>
             </div>
           </v-col>
+        </template>
+        <template v-if="articleList.length === 0 && !loading">
+          <h3
+            class="ma-10"
+          >There aren't articles that relate to this subject. You can share your knowledge about it by creating a new article at the utility bar on the right side of the screen</h3>
         </template>
       </v-row>
     </div>
@@ -104,14 +114,14 @@
 </template>
 
 <script>
-import ArticleCreateDialogComponent from '../components/ArticleCreateDialog';
-import NeumorphimsmInput from '../components/NeumorphimsmInput'
+import ArticleCreateDialogComponent from "../components/ArticleCreateDialog";
+import NeumorphimsmInput from "../components/NeumorphimsmInput";
 import axios from "axios";
 
 export default {
   components: {
-    'app-article-create-dialog': ArticleCreateDialogComponent,
-    'neumorphimsm-input': NeumorphimsmInput
+    "app-article-create-dialog": ArticleCreateDialogComponent,
+    "neumorphimsm-input": NeumorphimsmInput
   },
   data() {
     return {
@@ -155,7 +165,8 @@ export default {
         }
       ],
       articleList: [],
-      loading: false
+      loading: false,
+      searchString: ""
     };
   },
   watch: {
@@ -169,10 +180,19 @@ export default {
   computed: {
     isShowUtilities() {
       return this.$vuetify.breakpoint.mdAndUp;
+    },
+    articleListShow() {
+      return this.searchString === "" ? this.articleList : this.filterArticle();
     }
   },
   methods: {
-    goBack(){
+    filterArticle() {
+      return this.articleList.filter(x => x.title.includes(this.searchString));
+    },
+    searchStringChange(searchString) {
+      this.searchString = searchString;
+    },
+    goBack() {
       this.$router.go(-1);
     },
     getData(type) {
@@ -183,10 +203,13 @@ export default {
       });
     },
     openNewArticleDialog() {
-      if( this.$store.state.isLogin === true )
+      if (this.$store.state.isLogin === true)
         this.displayCreateArticleDialog = true;
       else
-        this.$emit('login', 'To create a new article you need to login first!!!');
+        this.$emit(
+          "login",
+          "To create a new article you need to login first!!!"
+        );
     },
     closeNewArticleDialog() {
       this.displayCreateArticleDialog = false;

@@ -52,36 +52,27 @@
         <span>Dev'Coffee</span>
       </v-toolbar-title>
       <v-spacer />
-      <v-menu
-        close-on-click
-        close-on-content-click
-        offset-y
-        v-if="$store.state.isLogin === true"
-      >
-      <template v-slot:activator="{ on }">
-        <v-btn class="text-none"
-          color="white"
-          dark
-          v-on="on"
-          text
-          small
-        >
-          <img :src="$store.state.usData.usAva" alt="avatar" width="30px" height="30px" class="mr-2">
-          {{$store.state.usData.usName}}
-          <v-icon right>mdi-menu-down</v-icon>
-        </v-btn>
-      </template>
-      <v-list dense>
-        <v-list-item
-          v-for="(item, index) in userMenuItems"
-          :key="index"
-          @click="item.onClick"
-        >
-          <v-icon small class="mr-2">{{ item.icon }}</v-icon>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+      <v-menu close-on-click close-on-content-click offset-y v-if="$store.state.isLogin === true">
+        <template v-slot:activator="{ on }">
+          <v-btn class="text-none" color="white" dark v-on="on" text small>
+            <img
+              :src="$store.state.usData.usAva"
+              alt="avatar"
+              width="30px"
+              height="30px"
+              class="mr-2"
+            />
+            {{$store.state.usData.usName}}
+            <v-icon right>mdi-menu-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list dense>
+          <v-list-item v-for="(item, index) in userMenuItems" :key="index" @click="item.onClick">
+            <v-icon small class="mr-2">{{ item.icon }}</v-icon>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-btn icon @click="openLoginDialog()" v-if="$store.state.isLogin === false">
         <v-icon>mdi-login</v-icon>
       </v-btn>
@@ -89,19 +80,16 @@
     <v-content>
       <router-view @login="openLoginDialog"></router-view>
     </v-content>
-    <v-dialog
-      v-model="isOpenLoginDialog"
-      width="550px"
-    >
+    <v-dialog v-model="isOpenLoginDialog" width="550px">
       <app-login v-on:closeDialog="closeLoginDialog()" ref="loginComponent"></app-login>
     </v-dialog>
   </v-app>
 </template>
 
 <script>
-import LoginComponent from './components/LoginDialog'
-import { mapActions } from 'vuex'
-import axios from 'axios'
+import LoginComponent from "./components/LoginDialog";
+import { mapActions } from "vuex";
+import axios from "axios";
 
 export default {
   name: "App",
@@ -109,7 +97,7 @@ export default {
     "app-login": LoginComponent
   },
 
-  data: (vm) => ({
+  data: vm => ({
     isOpenLoginDialog: false,
     drawer: false,
     items: [
@@ -119,60 +107,84 @@ export default {
         model: true,
         "icon-alt": "mdi-chevron-down",
         children: [
-          { icon: "mdi-language-javascript", text: "Javascripts", textClass: "yellow--text text--darken-2", linkTo: '/articles?type=javascript' },
-          { icon: "mdi-vuejs", text: "VueJs", textClass: "green--text", linkTo: '/articles?type=vuejs' },
-          { icon: "mdi-react", text: "ReactJs", textClass: "blue--text", linkTo: '/articles?type=reactjs' },
-          { icon: "mdi-alpha-e-box-outline", text: "English", textClass: "red--text", linkTo: '/articles?type=english' }
+          {
+            icon: "mdi-language-javascript",
+            text: "Javascripts",
+            textClass: "yellow--text text--darken-2",
+            linkTo: "/articles?type=javascript"
+          },
+          {
+            icon: "mdi-vuejs",
+            text: "VueJs",
+            textClass: "green--text",
+            linkTo: "/articles?type=vuejs"
+          },
+          {
+            icon: "mdi-react",
+            text: "ReactJs",
+            textClass: "blue--text",
+            linkTo: "/articles?type=reactjs"
+          },
+          {
+            icon: "mdi-alpha-e-box-outline",
+            text: "English",
+            textClass: "red--text",
+            linkTo: "/articles?type=english"
+          }
         ]
       },
-      { icon: "mdi-history", text: "TimeLine" },
+      { icon: "mdi-history", text: "TimeLine" }
     ],
     userMenuItems: [
-      { title: 'Messages', icon: 'mdi-message-alert', onClick: vm.nothing },
-      { title: 'Notification', icon: 'mdi-bell-ring', onClick: vm.nothing },
-      { title: 'Logout', icon: 'mdi-logout', onClick: vm.logout }
-    ],
+      { title: "Messages", icon: "mdi-message-alert", onClick: vm.nothing },
+      { title: "Notification", icon: "mdi-bell-ring", onClick: vm.nothing },
+      { title: "Logout", icon: "mdi-logout", onClick: vm.logout }
+    ]
   }),
-  mounted(){
+  mounted() {
     this.checkLogin();
   },
   methods: {
-    ...mapActions(['checkLogin', 'saveUserData']),
-    nothing(){
+    ...mapActions(["checkLogin", "saveUserData"]),
+    nothing() {
       //TODO: will update later
     },
-    logout(){
+    logout() {
       try {
-        axios.get(this.$store.state.dbUrl + '/user/logout', {
-          withCredentials: true
-        }).then(() => {
-          this.saveUserData({
-            userData: {}, 
-            isLogin: false
+        axios
+          .get(this.$store.state.dbUrl + "/user/logout", {
+            withCredentials: true
+          })
+          .then(() => {
+            this.saveUserData({
+              userData: {},
+              isLogin: false
+            });
           });
-        });
-      } catch( err ){
-        console.log(err)
+      } catch (err) {
+        console.log(err);
       }
     },
-    openLoginDialog( notifyMessage ){
-      if(this.$refs.loginComponent){
-        this.$refs.loginComponent.$data.notifyMessage = '';
-        this.$refs.loginComponent.$data.errorMessage = '';
-        this.$refs.loginComponent.$refs.form.reset();
-      }
-      if( notifyMessage )
-        this.$refs.loginComponent.$data.notifyMessage = notifyMessage;
+    openLoginDialog(notifyMessage) {
       this.isOpenLoginDialog = true;
+      this.$nextTick(() => {
+        if (this.$refs.loginComponent && this.$refs.loginComponent.$data) {
+          this.$refs.loginComponent.$data.notifyMessage = "";
+          this.$refs.loginComponent.$data.errorMessage = "";
+          this.$refs.loginComponent.$refs.form.reset();
+        }
+        if (notifyMessage)
+          this.$refs.loginComponent.$data.notifyMessage = notifyMessage;
+      });
     },
-    closeLoginDialog(){
+    closeLoginDialog() {
       this.isOpenLoginDialog = false;
-    },
+    }
   }
 };
 </script>
 <style scoped>
-  .row{ 
-    margin: 0;
-  }
+.row {
+  margin: 0;
+}
 </style>

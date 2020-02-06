@@ -10,7 +10,7 @@
         <p v-if="errorMessage" class="pt-4 mb-0 red--text font-weight-medium font-italic subtitle-1">- {{errorMessage}}</p>
         <div v-if="notifyMessage" class="pt-4 mb-0 subtitle-1 d-flex align-center ">
           <v-icon class="yellow--text text--darken-3 fs-35">mdi-alert-box-outline</v-icon>
-          <span> {{notifyMessage}}</span>
+          <span class="ml-2">{{notifyMessage}}</span>
         </div>
         <v-text-field
           v-model="email"
