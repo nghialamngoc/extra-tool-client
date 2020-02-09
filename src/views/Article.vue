@@ -15,19 +15,19 @@
       <v-list class="pa-0">
         <v-list-item link @click="goBack">
           <v-list-item-icon>
-            <v-icon class="fs-17">mdi-undo</v-icon>
+            <v-icon class="fs-30">mdi-undo</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Go Back</v-list-item-title>
         </v-list-item>
         <v-list-item link @click="openDialog" v-if="isShowUtilities">
           <v-list-item-icon>
-            <v-icon class="fs-17">mdi-file-document-edit-outline</v-icon>
+            <v-icon class="fs-30">mdi-file-document-edit-outline</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Edit</v-list-item-title>
         </v-list-item>
         <v-list-item link @click="openDeleteConfirm" v-if="isShowUtilities">
           <v-list-item-icon>
-            <v-icon class="fs-17">mdi-delete-alert-outline</v-icon>
+            <v-icon class="fs-30">mdi-delete-alert-outline</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Delete</v-list-item-title>
         </v-list-item>

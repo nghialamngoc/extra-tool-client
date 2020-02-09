@@ -80,7 +80,7 @@
     <v-content>
       <router-view @login="openLoginDialog"></router-view>
     </v-content>
-    <v-dialog v-model="isOpenLoginDialog" width="550px">
+    <v-dialog v-model="isOpenLoginDialog" max-width="900px">
       <app-login v-on:closeDialog="closeLoginDialog()" ref="loginComponent"></app-login>
     </v-dialog>
   </v-app>
@@ -166,8 +166,17 @@ export default {
       }
     },
     openLoginDialog(notifyMessage) {
-      this.isOpenLoginDialog = true;
       this.$nextTick(() => {
+        if( this.$refs.loginComponent ){
+          this.$refs.loginComponent.onSignIn = true;
+          this.$refs.loginComponent.$refs.loginBg_1.classList.remove("sign-in__animation");
+          this.$refs.loginComponent.$refs.loginBg_1.classList.remove("sign-up__animation");
+          this.$refs.loginComponent.$refs.loginBg_2.classList.toggle("bg2-transition");
+          this.$refs.loginComponent.$refs.loginBg_3.classList.toggle("bg3-transition");
+          this.$refs.loginComponent.$refs.signup.classList.add("opa_0");
+          this.$refs.loginComponent.$refs.signin.classList.remove("opa_0");
+        }
+
         if (this.$refs.loginComponent && this.$refs.loginComponent.$data) {
           this.$refs.loginComponent.$data.notifyMessage = "";
           this.$refs.loginComponent.$data.errorMessage = "";
@@ -175,6 +184,7 @@ export default {
         }
         if (notifyMessage)
           this.$refs.loginComponent.$data.notifyMessage = notifyMessage;
+        this.isOpenLoginDialog = true;
       });
     },
     closeLoginDialog() {

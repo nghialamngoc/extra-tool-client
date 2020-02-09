@@ -16,13 +16,13 @@
         <v-list class="pa-0">
           <v-list-item link @click="goBack">
             <v-list-item-icon>
-              <v-icon class="fs-17">mdi-undo</v-icon>
+              <v-icon class="fs-30">mdi-undo</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Go Back</v-list-item-title>
           </v-list-item>
           <v-list-item link @click="openNewArticleDialog" v-if="isShowUtilities">
             <v-list-item-icon>
-              <v-icon class="fs-17">mdi-shape-square-plus</v-icon>
+              <v-icon class="fs-30">mdi-shape-square-plus</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Add new</v-list-item-title>
           </v-list-item>
