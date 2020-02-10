@@ -171,8 +171,8 @@ export default {
           this.$refs.loginComponent.onSignIn = true;
           this.$refs.loginComponent.$refs.loginBg_1.classList.remove("sign-in__animation");
           this.$refs.loginComponent.$refs.loginBg_1.classList.remove("sign-up__animation");
-          this.$refs.loginComponent.$refs.loginBg_2.classList.toggle("bg2-transition");
-          this.$refs.loginComponent.$refs.loginBg_3.classList.toggle("bg3-transition");
+          this.$refs.loginComponent.$refs.loginBg_2.classList.remove("bg2-transition");
+          this.$refs.loginComponent.$refs.loginBg_3.classList.remove("bg3-transition");
           this.$refs.loginComponent.$refs.signup.classList.add("opa_0");
           this.$refs.loginComponent.$refs.signin.classList.remove("opa_0");
         }

@@ -57,9 +57,9 @@
           </div>
         </template>
         <template v-if="articleList.length > 0 && !loading">
-          <v-col cols="11" md="8" lg="6" xl="5">
+          <v-col cols="10" md="8" lg="6" xl="5" :class="{ 'order-1': $vuetify.breakpoint.smOnly || $vuetify.breakpoint.xsOnly }">
             <template v-if="articleListShow.length > 0">
-              <div class="article-one" v-for="article in articleListShow" :key="article._id">
+              <div class="article-one" v-for="article in articleListShow.slice(( page * articleOnPage ) - articleOnPage, ( page * articleOnPage ))" :key="article._id">
                 <v-row>
                   <v-col cols="6" md="5" lg="4">
                     <v-img :src="article.articleImg"></v-img>
@@ -91,16 +91,25 @@
               <h2 class="mt-10">Nothing...</h2>
             </template>
           </v-col>
-          <v-col cols="11" md="3" lg="2" xl="2">
+          <v-col cols="8" md="3" lg="2" xl="2" :class="{ 'order-0': $vuetify.breakpoint.smOnly || $vuetify.breakpoint.xsOnly }">
             <div class="search-wrapper mt-10">
               <neumorphimsm-input @func="searchStringChange"></neumorphimsm-input>
             </div>
           </v-col>
+          <v-col cols="12" class="d-flex justify-center">
+            <template>
+              <div class="text-center pagination">
+                <v-pagination
+                  v-model="page"
+                  :length="numberOfPage"
+                  :total-visible="7"
+                ></v-pagination>
+              </div>
+            </template>
+          </v-col>
         </template>
         <template v-if="articleList.length === 0 && !loading">
-          <h3
-            class="ma-10"
-          >There aren't articles that relate to this subject. You can share your knowledge about it by creating a new article at the utility bar on the right side of the screen</h3>
+          <h3 class="ma-10">There aren't articles that relate to this subject. You can share your knowledge about it by creating a new article at the utility bar on the right side of the screen</h3>
         </template>
       </v-row>
     </div>
@@ -125,6 +134,8 @@ export default {
   },
   data() {
     return {
+      page: 1,
+      articleOnPage: 3,
       displayCreateArticleDialog: false,
       tags: [
         {
@@ -182,12 +193,17 @@ export default {
       return this.$vuetify.breakpoint.mdAndUp;
     },
     articleListShow() {
-      return this.searchString === "" ? this.articleList : this.filterArticle();
+      return this.searchString === "" ? 
+        this.articleList :
+        this.filterArticle();
+    },
+    numberOfPage(){
+      return Math.ceil(this.articleListShow.length / this.articleOnPage);
     }
   },
   methods: {
     filterArticle() {
-      return this.articleList.filter(x => x.title.includes(this.searchString));
+      return this.articleList.filter(x => x.title.toLowerCase().includes(this.searchString));
     },
     searchStringChange(searchString) {
       this.searchString = searchString;
@@ -235,9 +251,16 @@ a {
 }
 
 .container {
+  position: relative;
   padding: 0;
+  padding-bottom: 50px;
   background-color: #e6e6e6;
-  min-height: 95vh;
+  min-height: 93vh;
+  .pagination{
+    position: absolute;
+    padding: 20px 0;
+    bottom: 0;
+  }
 }
 
 .article-top {
