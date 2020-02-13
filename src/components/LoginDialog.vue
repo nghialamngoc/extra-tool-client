@@ -20,26 +20,14 @@
             <v-text-field
               label="Password"
               prepend-icon="mdi-lock"
-              :append-icon="mouseoverPass ? showPassword ? 'mdi-eye' : 'mdi-eye-off' : ''"
               :rules="passwordRules"
-              :type="showPassword ? 'text' : 'password'"
-              @focus="mouseoverPass = true"
-              @blur="mouseoverPass = false"
-              @click:append="showPassword = !showPassword"
               required
-              autocomplete="new-password"
             />
             <v-text-field
-              label="Confirm Password"
+              label="Password"
               prepend-icon="mdi-lock"
-              :append-icon="mouseoverPass ? showPassword ? 'mdi-eye' : 'mdi-eye-off' : ''"
               :rules="passwordRules"
-              :type="showPassword ? 'text' : 'password'"
-              @focus="mouseoverPass = true"
-              @blur="mouseoverPass = false"
-              @click:append="showPassword = !showPassword"
               required
-              autocomplete="new-password"
             />
           </div>
           <div>
@@ -61,8 +49,12 @@
       </v-col>
       <v-col cols="6" class="illustration" ref="signin">
         <v-form ref="form" v-model="valid" lazy-validation class="pa-10" v-show="onSignIn">
-          <p class="display-1 font-weight-bold mb-6 linear-gradient_text_1">Sign In</p>
-          <div class>
+          <p class="display-1 font-weight-bold mb-4 linear-gradient_text_1">Sign In</p>
+          <p class="errorMessage fs-15 red--text d-flex align-center">
+            <v-icon class="red--text" v-if="loginErrorMessage">mdi-alert-circle-outline</v-icon>
+            <span class="pl-1">{{loginErrorMessage}}</span>
+          </p>
+          <div>
             <v-text-field
               v-model="email"
               :rules="emailRules"
@@ -129,7 +121,7 @@ export default {
         v => /.+@.+\..+/.test(v) || "E-mail must be valid"
       ],
       passwordRules: [v => !!v || "Password is required"],
-      errorMessage: "",
+      loginErrorMessage: "",
       notifyMessage: "",
       isLoading: false
     };
@@ -140,8 +132,11 @@ export default {
   },
   methods: {
     ...mapActions(["saveUserData"]),
+    clearData(){
+      this.loginErrorMessage = "";
+    },
     handleChange() {
-      console.log('here')
+      this.clearData();
       this.onSignIn = !this.onSignIn;
       if( !this.onSignIn ){
         this.$refs.loginBg_1.classList.add("sign-up__animation");
@@ -181,15 +176,16 @@ export default {
             } else {
               const error_code = res.data.error_code;
               if (error_code && error_code === "EMAIL_OR_PASSWORD_INCORRECT") {
-                this.errorMessage = "- Email or password incorrect.";
+                this.loginErrorMessage = "Email or password incorrect.";
               }
             }
           })
           .catch(err => {
             this.isLoading = false;
             console.log(err);
-            this.$emit("closeDialog");
-            this.$router.push("/error");
+            this.loginErrorMessage = "No response from server. Please try later!";
+            // this.$emit("closeDialog");
+            // this.$router.push("/error");
           });
         this.isLoading = true;
       }
@@ -242,6 +238,9 @@ export default {
     z-index: 2;
     opacity: 1;
     transition: all 1200ms linear;
+    .errorMessage{
+      min-height: 25px;
+    }
   }
 }
 

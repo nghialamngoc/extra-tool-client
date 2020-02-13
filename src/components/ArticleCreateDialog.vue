@@ -20,6 +20,7 @@
                 required
                 v-model="titleInputValue"
                 :rules="titleRules"
+                ref="titleInputEl"
               ></v-text-field>
             </v-col>
             <v-col cols="2" class="pa-1 d-flex align-center">
@@ -29,7 +30,7 @@
               </div>
             </v-col>
             <v-col cols="6" class="pa-1">
-              <v-select v-model="tagValue" :items="items" attach chips label="Tags" dense multiple></v-select>
+              <v-select v-model="tagValue" :items="items" attach chips label="Tag" dense></v-select>
             </v-col>
             <v-col cols="6"></v-col>
             <v-col cols="12" class="pa-1">
@@ -39,7 +40,7 @@
           </v-row>
         </v-form>
       </v-container>
-      <neumorphism-button :text="'Save'" v-on:func='onSave()'></neumorphism-button>
+      <neumorphism-button :text="'Save'" v-on:func="onSave()"></neumorphism-button>
     </v-card-text>
   </v-card>
 </template>
@@ -47,8 +48,8 @@
 <script>
 //<editor-component class="editor-wrapper" ref="editor"></editor-component>
 //import Editor from "./EditorQuill";
-import NeumorphismButton from '../components/NeumorphismButton'
-import NeumorphismToggle from '../components/NeumorphimsmToggle'
+import NeumorphismButton from "../components/NeumorphismButton";
+import NeumorphismToggle from "../components/NeumorphimsmToggle";
 import axios from "axios";
 
 export default {
@@ -58,11 +59,35 @@ export default {
   },
   components: {
     //"editor-component": Editor
-    'neumorphism-button': NeumorphismButton,
-    'neumorphism-toggle': NeumorphismToggle
+    "neumorphism-button": NeumorphismButton,
+    "neumorphism-toggle": NeumorphismToggle
   },
   data: vm => ({
-    froalaConfig: vm.$store.state.froalaConfig,
+    froalaConfig: {
+      placeholderText: "Edit Your Content Here!",
+      imagePasteProcess: true,
+      imageDefaultWidth: "100%",
+      imageDefaultAlign: "left",
+      events: {
+        "image.beforeUpload": function(images) {
+          var editor = this;
+          if (images.length) {
+            // Create a File Reader.
+            var reader = new FileReader();
+            // Set the reader to insert images when they are loaded.
+            reader.onload = function(e) {
+              var result = e.target.result;
+              editor.image.insert(result, null, null, editor.image.get());
+            };
+            // Read image as base64.
+            reader.readAsDataURL(images[0]);
+          }
+          editor.popups.hideAll();
+          // Stop default upload chain.
+          return false;
+        }
+      }
+    },
     content: "",
     loading: false,
     valid: false,
@@ -73,9 +98,10 @@ export default {
       "typescript",
       "react",
       "design",
-      "algorithms"
+      "algorithms",
+      "english"
     ],
-    tagValue: [],
+    tagValue: "",
     isReviewed: false,
     titleInputValue: "",
     titleRules: [
@@ -84,46 +110,54 @@ export default {
     ],
     authorInputValue: vm.$store.state.usData.usName
   }),
+  created(){
+    console.log('create');
+  },
+  destroyed(){
+    console.log('destroyed')
+  },
   watch: {
     $route() {
-      this.tagValue = this.$route.query.type ? [this.$route.query.type] : [];
+      this.tagValue = this.$route.query.type ? this.$route.query.type : "";
     }
   },
   mounted() {
-    this.tagValue = this.$route.query.type ? [this.$route.query.type] : [];
+    this.tagValue = this.$route.query.type ? this.$route.query.type : "";
   },
   methods: {
     onClose() {
       this.$emit("closeDialog");
     },
     onSave() {
-      this.loading = true;
-      axios
-        .post(
-          this.$store.state.dbUrl + "/article",
-          {
-            authorId: this.$store.state.usData.usId,
-            title: this.titleInputValue,
-            tags: this.tagValue.join(","),
-            //content: this.$refs.editor.editor.getHTML(),
-            //content: this.$refs.editor.htmlForEditor,
-            content: this.content,
-            isReviewed: this.$refs['activeToggle'].$data.status,
-            createDate: Date.now()
-          },
-          {
-            withCredentials: true
-          }
-        )
-        .then(res => {
-          this.loading = false;
-          this.$emit("addNewArticle", res.data.data);
-          this.onClose();
-        })
-        .catch(err => {
-          this.loading = false;
-          console.log(err);
-        });
+      if ( this.$refs.form.validate() && this.content != "" ) {
+        this.loading = true;
+        axios
+          .post(
+            this.$store.state.dbUrl + "/article",
+            {
+              authorId: this.$store.state.usData.usId,
+              title: this.titleInputValue,
+              tags: this.tagValue,
+              //content: this.$refs.editor.editor.getHTML(),
+              //content: this.$refs.editor.htmlForEditor,
+              content: this.content,
+              isReviewed: this.$refs["activeToggle"].$data.status,
+              createDate: Date.now()
+            },
+            {
+              withCredentials: true
+            }
+          )
+          .then(res => {
+            this.loading = false;
+            this.onClose();
+            this.$emit("addNewArticle", res.data.data);
+          })
+          .catch(err => {
+            this.loading = false;
+            console.log(err);
+          });
+      }
     }
   }
 };
@@ -142,7 +176,7 @@ export default {
 //     font-size: 15px;
 //   }
 // }
-.createDialog{
+.createDialog {
   background: #ececec !important;
 }
 </style>

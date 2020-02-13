@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     froalaConfig: {
+      placeholderText: 'Edit Your Content Here!',
       imagePasteProcess: true,
       imageDefaultWidth: "100%",
       imageDefaultAlign: "left",
@@ -69,6 +70,7 @@ export const store = new Vuex.Store({
     saveUserData(state, { userData, isLogin }){
       if( userData != null && userData != undefined ){
         state.isLogin = isLogin;
+        state.usData.usId = userData.usId;
         state.usData.usName = userData.name;
         state.usData.usRole = userData.rol;
         state.usData.usAva = userData.avatar;   

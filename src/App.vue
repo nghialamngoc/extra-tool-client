@@ -165,7 +165,7 @@ export default {
         console.log(err);
       }
     },
-    openLoginDialog(notifyMessage) {
+    openLoginDialog() {
       this.$nextTick(() => {
         if( this.$refs.loginComponent ){
           this.$refs.loginComponent.onSignIn = true;
@@ -176,14 +176,11 @@ export default {
           this.$refs.loginComponent.$refs.signup.classList.add("opa_0");
           this.$refs.loginComponent.$refs.signin.classList.remove("opa_0");
         }
-
         if (this.$refs.loginComponent && this.$refs.loginComponent.$data) {
           this.$refs.loginComponent.$data.notifyMessage = "";
-          this.$refs.loginComponent.$data.errorMessage = "";
+          this.$refs.loginComponent.$data.loginErrorMessage = "";
           this.$refs.loginComponent.$refs.form.reset();
         }
-        if (notifyMessage)
-          this.$refs.loginComponent.$data.notifyMessage = notifyMessage;
         this.isOpenLoginDialog = true;
       });
     },

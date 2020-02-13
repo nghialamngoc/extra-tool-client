@@ -31,7 +31,7 @@
     </v-card>
 
     <div class="article-top" align="center" justify="center" color="indigo darken-3">
-      <p class="article-top-title">#JAVASCRIPT</p>
+      <p class="article-top-title">#{{title.toUpperCase()}}</p>
       <p class="article-top-count">A collection of 1511 posts</p>
       <div class="article-top-tags">
         <v-chip
@@ -117,6 +117,7 @@
       <app-article-create-dialog
         @closeDialog="closeNewArticleDialog"
         @addNewArticle="addNewArticle"
+        ref="articleCreateDialog"
       ></app-article-create-dialog>
     </v-dialog>
   </v-container>
@@ -134,6 +135,7 @@ export default {
   },
   data() {
     return {
+      title: "",
       page: 1,
       articleOnPage: 3,
       displayCreateArticleDialog: false,
@@ -182,10 +184,12 @@ export default {
   },
   watch: {
     $route: function(to) {
+      this.title = to.query.type;
       this.getData(to.query.type || "");
     }
   },
   created() {
+    this.title = this.$route.query.type;
     this.getData(this.$route.query.type || "");
   },
   computed: {
@@ -211,7 +215,8 @@ export default {
     goBack() {
       this.$router.go(-1);
     },
-    getData(type) {
+    getData( type ) {
+      console.log('getData')
       this.loading = true;
       axios.get(this.$store.state.dbUrl + "/article?type=" + type).then(res => {
         this.articleList = Object.values(res.data.data);
@@ -219,13 +224,11 @@ export default {
       });
     },
     openNewArticleDialog() {
-      if (this.$store.state.isLogin === true)
+      if (this.$store.state.isLogin === true){
         this.displayCreateArticleDialog = true;
+      }
       else
-        this.$emit(
-          "login",
-          "To create a new article you need to login first!!!"
-        );
+        this.$emit("login");
     },
     closeNewArticleDialog() {
       this.displayCreateArticleDialog = false;
