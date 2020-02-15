@@ -51,6 +51,7 @@
 import NeumorphismButton from "../components/NeumorphismButton";
 import NeumorphismToggle from "../components/NeumorphimsmToggle";
 import axios from "axios";
+import { EventBus } from '../event-bus';
 
 export default {
   props: {
@@ -110,12 +111,6 @@ export default {
     ],
     authorInputValue: vm.$store.state.usData.usName
   }),
-  created(){
-    console.log('create');
-  },
-  destroyed(){
-    console.log('destroyed')
-  },
   watch: {
     $route() {
       this.tagValue = this.$route.query.type ? this.$route.query.type : "";
@@ -129,6 +124,9 @@ export default {
       this.$emit("closeDialog");
     },
     onSave() {
+      if( this.content === ""){
+        EventBus.$emit('alert-message', { type: "error", message: "You can't create new article with empty content"});
+      }
       if ( this.$refs.form.validate() && this.content != "" ) {
         this.loading = true;
         axios

@@ -201,7 +201,7 @@ export default {
   height: 475px;
   overflow: hidden;
   background-color: white;
-
+  margin-top: -50px;
   .bg_1 {
     position: absolute;
     top: 0;

@@ -58,23 +58,23 @@
         </div>
       </v-col>
     </v-row>
-    <v-dialog v-model="deleteConfirmDialog" max-width="400">
-      <v-card class="confirm-dialog">
-        <div class="d-flex flex-no-wrap justify-space-between pt-7">
-          <v-icon class="ml-3 mb-3" size="80" tile>mdi-delete-empty-outline</v-icon>
-          <div class="pr-2">
-            <v-card-title class="headline">Are you sure?</v-card-title>
-
-            <v-card-subtitle>Do you realy want to delete this article.</v-card-subtitle>
+    <v-dialog v-model="deleteConfirmDialog" max-width="500" ref="deleteDialog">
+      <div class="confirm-dialog">
+        <div class="icon-trash">
+          <v-icon class="icon">mdi-trash-can-outline</v-icon>
+        </div>
+        <div class="d-flex align-center justify-center flex-column confirm-dialog__content">
+          <p class="confirm-dialog__title mb-4">You are about to delete a article</p>
+          <p class="confirm-dialog__title-2">This will delete your article from catalog</p>
+          <p class="confirm-dialog__title-2">Are you sure?</p>
+        </div>
+        <div class="confirm-dialog__footer">
+          <div>
+            <v-btn color="green darken-1" text @click="deleteConfirmDialog = false">No</v-btn>
+            <v-btn text @click="deleteArticle" class="button__hover">Yes</v-btn>
           </div>
         </div>
-
-        <v-card-actions class="mt-6">
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="deleteConfirmDialog = false">No</v-btn>
-          <v-btn text @click="deleteArticle" class="button__hover">Yes</v-btn>
-        </v-card-actions>
-      </v-card>
+      </div>
     </v-dialog>
     <v-dialog v-model="editArticleDialog" fullscreen>
       <app-article-edit-dialog
@@ -110,6 +110,9 @@ export default {
         this.$store.state.usData.usRole == "Admin"
       );
     }
+  },
+  mounted(){
+    
   },
   created() {
     this.articleId = this.$route.query.id;
@@ -184,4 +187,43 @@ a {
     font-weight: 400;
   }
 }
-</style>
+
+//Confirm dialog
+.confirm-dialog {
+  background-color: white;
+  width: 100%;
+  height: 250px;
+  position: relative;
+  .icon-trash{
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translate(- 50%, -50% );
+    padding: 9px;
+    border-radius: 50%;
+    background-color: #F6F6F6;
+    .icon{
+      font-size: 70px;
+      color: #FF313A;
+    }
+  }
+  .confirm-dialog__content{
+    padding-top: 60px;
+    .confirm-dialog__title{
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .confirm-dialog__title-2{
+      font-size: 19px;
+      font-weight: 500;
+      color: gray;
+    }
+  }
+  .confirm-dialog__footer{
+    padding-bottom: 10px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}
+</style> 

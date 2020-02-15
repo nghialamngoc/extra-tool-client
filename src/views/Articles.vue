@@ -216,7 +216,6 @@ export default {
       this.$router.go(-1);
     },
     getData( type ) {
-      console.log('getData')
       this.loading = true;
       axios.get(this.$store.state.dbUrl + "/article?type=" + type).then(res => {
         this.articleList = Object.values(res.data.data);

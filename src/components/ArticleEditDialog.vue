@@ -52,8 +52,8 @@
 //<editor-component class="editor-wrapper" ref="editor"></editor-component>
 //import Editor from './EditorQuill';
 import axios from 'axios';
-import NeumorphismButton from '../components/NeumorphismButton'
-import NeumorphismToggle from '../components/NeumorphimsmToggle'
+import NeumorphismButton from '../components/NeumorphismButton';
+import NeumorphismToggle from '../components/NeumorphimsmToggle';
 
 export default {
   props: {

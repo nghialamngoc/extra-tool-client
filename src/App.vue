@@ -77,6 +77,7 @@
         <v-icon>mdi-login</v-icon>
       </v-btn>
     </v-app-bar>
+    <alert-message ref="alertComponent"></alert-message>
     <v-content>
       <router-view @login="openLoginDialog"></router-view>
     </v-content>
@@ -88,13 +89,16 @@
 
 <script>
 import LoginComponent from "./components/LoginDialog";
+import AlertMessageComponent from './components/AlertMessageDialog';
 import { mapActions } from "vuex";
 import axios from "axios";
+import { EventBus } from './event-bus';
 
 export default {
   name: "App",
   components: {
-    "app-login": LoginComponent
+    "app-login": LoginComponent,
+    "alert-message": AlertMessageComponent 
   },
 
   data: vm => ({
@@ -143,11 +147,12 @@ export default {
   }),
   mounted() {
     this.checkLogin();
+    EventBus.$on('alert-message', this.handlerWhenRecieveMessageFromEventBus);
   },
   methods: {
     ...mapActions(["checkLogin", "saveUserData"]),
-    nothing() {
-      //TODO: will update later
+    handlerWhenRecieveMessageFromEventBus(data){
+      this.$refs.alertComponent.warningPush(data);
     },
     logout() {
       try {
