@@ -125,7 +125,7 @@ export default {
     },
     onSave() {
       if( this.content === ""){
-        EventBus.$emit('alert-message', { type: "error", message: "You can't create new article with empty content"});
+        EventBus.$emit('alert-message', { type: "error", message: "You can't create a new article with empty content"});
       }
       if ( this.$refs.form.validate() && this.content != "" ) {
         this.loading = true;
