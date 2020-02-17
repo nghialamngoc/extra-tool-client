@@ -108,3 +108,9 @@ p {
   margin-top: -50px !important;
   min-height: 120vh !important;
 }
+
+.fr-wrapper{
+  .fr-view{
+    max-height: 55vh;
+  }
+}

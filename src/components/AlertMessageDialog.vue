@@ -6,13 +6,13 @@
           v-for="( warning, index ) in warningList"
           v-bind:key="index"
           class="alert-message_one d-flex align-center"
-          :style="{ 'border-left': '10px solid', 'border-color': 'red', 'top': (index * 80) + 'px' }"
+          :style="{ 'border-left': '10px solid', 'border-color': warning.borderColor, 'top': (index * 80) + 'px' }"
         >
           <div class="alert-message-one__icon">
-            <v-icon class="red--text icon">mdi-close-circle</v-icon>
+            <v-icon :class="warning.iconClass">{{warning.icon}}</v-icon>
           </div>
           <div class="alert-message-one__content">
-            <p>Error {{index}}</p>
+            <p>{{warning.type}}</p>
             <p>{{warning.message}}</p>
           </div>
         </div>
@@ -33,11 +33,26 @@ export default {
   methods: {
     warningPush(warning) {
       var _seft = this;
+      switch (warning.type){
+        case "Error": 
+          warning.borderColor = "red";
+          warning.icon = "mdi-close-circle";
+          warning.iconClass = "red--text"
+          break;
+        case "Warning":
+          warning.borderColor = "#FFC122";
+          warning.icon = "mdi-alert";
+          warning.iconClass = "amber--text text-darken-1"
+          break;
+        case "Info":
+          warning.borderColor = "blue";
+          warning.icon = "mdi-alert-circle";
+          warning.iconClass = "blue--text"
+      }
       _seft.warningList.push(warning);
-      console.log(this.warningList)
       setTimeout(function (){
         _seft.warningList.shift()
-      }, 4000)
+      }, 5000)
     }
   }
 };
@@ -52,13 +67,14 @@ export default {
   top: 60px;
   right: 0;
   .container {
-    min-width: 500px;
+    width: 450px;
     position: relative;
     .alert-message_one {
       position: absolute;
       background-color: white;
       padding: 10px 40px 10px 20px;
       margin-bottom: 10px;
+      width: 100%;
       animation: alert-message-animation 5000ms linear;
       right: 0;
       .alert-message-one__icon {

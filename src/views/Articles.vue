@@ -194,7 +194,7 @@ export default {
   },
   computed: {
     isShowUtilities() {
-      return this.$vuetify.breakpoint.mdAndUp;
+      return this.$vuetify.breakpoint.mdAndUp && this.$store.state.isCheckLogin;
     },
     articleListShow() {
       return this.searchString === "" ? 
