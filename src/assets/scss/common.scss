@@ -99,18 +99,6 @@ p {
 }
 
 .v-dialog{
-  padding-top: 50px !important;
   border: none !important;
   box-shadow: none !important;
-}
-
-.v-dialog--fullscreen{
-  margin-top: -50px !important;
-  min-height: 120vh !important;
-}
-
-.fr-wrapper{
-  .fr-view{
-    max-height: 55vh;
-  }
 }

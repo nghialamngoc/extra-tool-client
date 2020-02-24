@@ -8,11 +8,7 @@
     </v-toolbar>
     <v-card-text>
       <v-container fluid>
-        <v-form 
-          ref="form"
-          v-model="valid"
-          @submit.prevent
-        >
+        <v-form ref="form" v-model="valid" @submit.prevent>
           <v-row class="mt-2">
             <v-col cols="2" class="pa-1">
               <v-text-field label="Author*" dense required v-model="authorInputValue" readonly></v-text-field>
@@ -43,7 +39,7 @@
           </v-row>
         </v-form>
       </v-container>
-      <neumorphism-button :text="'Save'" v-on:func='save()'></neumorphism-button>
+      <neumorphism-button :text="'Save'" v-on:func="save()"></neumorphism-button>
     </v-card-text>
   </v-card>
 </template>
@@ -51,9 +47,9 @@
 <script>
 //<editor-component class="editor-wrapper" ref="editor"></editor-component>
 //import Editor from './EditorQuill';
-import axios from 'axios';
-import NeumorphismButton from '../components/NeumorphismButton';
-import NeumorphismToggle from '../components/NeumorphimsmToggle';
+import axios from "axios";
+import NeumorphismButton from "../components/NeumorphismButton";
+import NeumorphismToggle from "../components/NeumorphimsmToggle";
 
 export default {
   props: {
@@ -63,15 +59,23 @@ export default {
   },
   components: {
     //'editor-component': Editor,
-    'neumorphism-button': NeumorphismButton,
-    'neumorphism-toggle': NeumorphismToggle
+    "neumorphism-button": NeumorphismButton,
+    "neumorphism-toggle": NeumorphismToggle
   },
   data: vm => ({
     froalaConfig: vm.$store.state.froalaConfig,
     content: "",
     loading: false,
     valid: false,
-    items: ["javascript", "vuejs", "css", "typescript", "react", "design", "algorithms"],
+    items: [
+      "javascript",
+      "vuejs",
+      "css",
+      "typescript",
+      "react",
+      "design",
+      "algorithms"
+    ],
     tagValue: [],
     isReviewed: false,
     titleInputValue: "",
@@ -80,41 +84,45 @@ export default {
       v => (v && v.length < 100) || "Title must be less than 100 characters"
     ],
     authorInputValue: "",
-    articleId: ''
+    articleId: ""
   }),
-  created(){
+  created() {
     this.content = this.articleData.content;
     this.tagValue.push(this.articleData.tags);
     this.authorInputValue = this.articleData.author.name;
     this.titleInputValue = this.articleData.title;
     this.isReviewed = this.articleData.isReviewed;
-    this.articleId = this.articleData._id
+    this.articleId = this.articleData._id;
   },
-  mounted(){
+  mounted() {
     //this.$refs.editor.htmlForEditor = this.articleData.content;
   },
   methods: {
-    close(){
+    close() {
       this.$emit("closeDialog");
     },
     save() {
-      this.loading = true;      
+      this.loading = true;
       axios
-        .put(this.$store.state.dbUrl + "/article", {
-          articleId: this.articleId,
-          authorId: this.$store.state.usData.usId,
-          title: this.titleInputValue,
-          tags: this.tagValue.join(","),
-          content: this.$refs.editor.htmlForEditor,
-          isReviewed: this.isReviewed,
-          editDate: Date.now()
-        },{
-          withCredentials: true
-        })
+        .put(
+          this.$store.state.dbUrl + "/article",
+          {
+            articleId: this.articleId,
+            authorId: this.$store.state.usData.usId,
+            title: this.titleInputValue,
+            tags: this.tagValue.join(","),
+            content: this.content,
+            isReviewed: this.isReviewed,
+            editDate: Date.now()
+          },
+          {
+            withCredentials: true
+          }
+        )
         .then(res => {
           this.loading = false;
-          this.$emit('update', res.data.data)
-          this.close()
+          this.$emit("update", res.data.data);
+          this.close();
         })
         .catch(err => {
           this.loading = false;
@@ -126,8 +134,7 @@ export default {
 </script>
 
 <style lang="scss">
-.editDialog{
+.editDialog {
   background: #ececec !important;
 }
-
 </style>

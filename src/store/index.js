@@ -58,12 +58,12 @@ export const store = new Vuex.Store({
             else {
               state.isLogin = false;
             }
+            state.isCheckLogin = true;
           }).catch( err => {
             console.log(err)
           })
-        }
-        finally{
-          state.isCheckLogin = true;
+        } catch(err){
+          console.log(err)
         }
       }
     },
