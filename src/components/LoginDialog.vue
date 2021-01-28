@@ -7,7 +7,7 @@
     <div class="bg_3" ref="loginBg_3"></div>
     <v-row>
       <v-col cols="6" class="illustration opa_0" ref="signup">
-        <v-form ref="form" lazy-validation class="pa-10" v-show="!onSignIn">
+        <v-form ref="form" lazy-validation class="pa-10 mt-6" v-show="!onSignIn">
           <p class="display-1 font-weight-bold mb-6 linear-gradient_text_2">Sign Up</p>
           <div class>
             <v-text-field
@@ -48,7 +48,7 @@
         </v-form>
       </v-col>
       <v-col cols="6" class="illustration" ref="signin">
-        <v-form ref="form" v-model="valid" lazy-validation class="pa-10" v-show="onSignIn">
+        <v-form ref="form" v-model="valid" lazy-validation class="pa-10 mt-6" v-show="onSignIn">
           <p class="display-1 font-weight-bold mb-4 linear-gradient_text_1">Sign In</p>
           <p class="errorMessage fs-15 red--text d-flex align-center">
             <v-icon class="red--text" v-if="loginErrorMessage">mdi-alert-circle-outline</v-icon>
